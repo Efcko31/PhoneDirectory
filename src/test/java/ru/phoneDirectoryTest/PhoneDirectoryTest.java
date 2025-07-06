@@ -1,14 +1,15 @@
-package ru.PhoneDirectoryTest;
+package ru.phoneDirectoryTest;
 
 
 import org.junit.jupiter.api.Test;
 import ru.PhoneDirectory.Person;
+import ru.PhoneDirectory.PhoneDirectory;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.PhoneDirectory.PhoneDirectory.*;
-import static ru.PhoneDirectoryTest.PersonsForPhoneDirectory.*;
+import static ru.phoneDirectoryTest.PersonsForPhoneDirectory.*;
 
 public class PhoneDirectoryTest {
 
@@ -69,11 +70,16 @@ public class PhoneDirectoryTest {
 
     @Test
     void transferringDataToSQL() {
-
+        PhoneDirectory.addNewPerson(new Person(
+                "+7-888-858-88-00",
+                "Алексей",
+                "Алексеев",
+                "",
+                "Санкт-Петербург",
+                "улица Гринькова, д.33, кв.76",
+                "Таксист"), phoneDirectory);
     }
 
-    public void transferringDataToSQLTest(List<Person> persons) {
-        
-    }
+
 
 }

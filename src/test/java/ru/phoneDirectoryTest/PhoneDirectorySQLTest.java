@@ -1,19 +1,17 @@
-package ru.PhoneDirectoryTest;
+package ru.phoneDirectoryTest;
 
 
 import org.junit.jupiter.api.Test;
 import ru.PhoneDirectory.Person;
-import ru.PhoneDirectory.PhoneDirectoryRepository.PhoneDirectoryRepository;
+import ru.PhoneDirectory.phoneDirectoryRepository.PhoneDirectoryRepository;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.PhoneDirectory.PhoneDirectoryRepository.PersonsForPhoneDirectory.aleksandrAleksandrov;
-import static ru.PhoneDirectory.PhoneDirectoryRepository.PersonsForPhoneDirectory.petrPetrov;
-import static ru.PhoneDirectory.PhoneDirectoryRepository.PhoneDirectoryRepository.findPeopleWithoutPatronymic;
+import static ru.PhoneDirectory.phoneDirectoryRepository.PersonsForPhoneDirectory.aleksandrAleksandrov;
+import static ru.PhoneDirectory.phoneDirectoryRepository.PhoneDirectoryRepository.findPeopleWithoutPatronymic;
 
 public class PhoneDirectorySQLTest {
     @Test

@@ -1,4 +1,4 @@
-package ru.PhoneDirectory.PhoneDirectoryRepository;
+package ru.PhoneDirectory.phoneDirectoryRepository;
 
 import ru.PhoneDirectory.Person;
 

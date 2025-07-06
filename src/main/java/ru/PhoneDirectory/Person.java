@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Person extends Object{
+public class Person extends Object {
     private String phoneNumber;
     private String firstName;
     private String lastName;
@@ -29,5 +29,14 @@ public class Person extends Object{
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "ФИО: " + lastName + " " + firstName + " " + patronymic
+                + "; Гроод: " + cityOfResidence
+                + "; Адрес: " + address
+                + "; Профессия: " + typeofActivity
+                + "; Телефон: " + phoneNumber + ".";
     }
 }

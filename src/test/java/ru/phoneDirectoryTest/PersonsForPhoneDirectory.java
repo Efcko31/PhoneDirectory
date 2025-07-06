@@ -1,4 +1,4 @@
-package ru.PhoneDirectoryTest;
+package ru.phoneDirectoryTest;
 
 import lombok.Getter;
 import ru.PhoneDirectory.Person;

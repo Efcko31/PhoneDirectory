@@ -1,4 +1,4 @@
-package ru.PhoneDirectory.Mapper;
+package ru.PhoneDirectory.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

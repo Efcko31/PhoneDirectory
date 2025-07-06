@@ -1,8 +1,8 @@
-package ru.PhoneDirectory.PhoneDirectoryRepository;
+package ru.PhoneDirectory.phoneDirectoryRepository;
 
 import java.sql.SQLException;
 
-import static ru.PhoneDirectory.PhoneDirectoryRepository.PersonsForPhoneDirectory.phoneDirectory;
+import static ru.PhoneDirectory.phoneDirectoryRepository.PersonsForPhoneDirectory.phoneDirectory;
 
 public class PDMain {
     public static void main(String[] args) {
@@ -10,7 +10,7 @@ public class PDMain {
         phoneDirectory.forEach(p -> {
             try {
                 repository.addPerson(p);
-                System.out.println(p.getFirstName() + p.getLastName() + " - добывлен в БД");
+                System.out.println(p.getFirstName() + p.getLastName() + " - добавлен в БД");
             } catch (SQLException e) {
                 System.out.println("Ошибка: " + e.getMessage());
                 ;

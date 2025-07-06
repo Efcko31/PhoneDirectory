@@ -2,8 +2,8 @@ package ru.PhoneDirectory;
 
 import ru.PhoneDirectory.DTO.FullNamePhoneNumb;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
-import ru.PhoneDirectory.Mapper.FullNamePhoneNumbAddressMapper;
-import ru.PhoneDirectory.Mapper.FullNamePhoneNumbMapper;
+import ru.PhoneDirectory.mapper.FullNamePhoneNumbAddressMapper;
+import ru.PhoneDirectory.mapper.FullNamePhoneNumbMapper;
 
 import java.util.List;
 import java.util.Objects;
@@ -92,6 +92,26 @@ public class PhoneDirectory {
         subscribersToWhomCallWasMade.forEach(PhoneDirectory::makeCall);
         System.out.println("-------------------------");
         return subscribersToWhomCallWasMade;
+    }
+
+    public static List<String> returnAllInformationAllPersons(List<Person> phoneDirectory) {
+        return phoneDirectory.stream().map(Person::toString).toList();
+    }
+
+    public static String addNewPerson(Person newPerson, List<Person> phoneDirectory){
+        boolean isThereSuchPhoneNumber = phoneDirectory.stream()
+                .anyMatch(p ->
+                        newPerson.getPhoneNumber().substring(newPerson.getPhoneNumber().indexOf("-"))
+                                .replaceAll("^[0-9]", "")
+                        .equals(p.getPhoneNumber().substring(p.getPhoneNumber().indexOf("-"))
+                                .replaceAll("^[0-9]", "")));
+
+        if (!isThereSuchPhoneNumber) {
+            phoneDirectory.add(newPerson);
+            return "Добавлен новый гражданин!";
+        } else {
+            return "Пользователь с таким номером телефоан уже есть!";
+        }
     }
 
     public static void makeCall(Person person) {
