@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class ToLowerCamelCase {
     @Test
     public void test() {
-        toLowerCamelCaseTest("adds a new person");
+        toLowerCamelCaseTest("checks users by phone number");
     }
 
     public void toLowerCamelCaseTest(String sentence) {

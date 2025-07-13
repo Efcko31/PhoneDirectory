@@ -10,6 +10,7 @@ import ru.PhoneDirectory.PhoneDirectory;
 
 import java.util.List;
 
+import static ru.PhoneDirectory.PhoneDirectory.checksUsersByPhoneNumber;
 import static ru.PhoneDirectory.phoneDirectoryRepository.PersonsForPhoneDirectory.phoneDirectory;
 
 @RestController
@@ -60,9 +61,39 @@ public class Controller {
     //    "address" : "улица Гринькова, д.33, кв.76",
     //    "typeofActivity" : "Таксист"
 
-    @PutMapping("/replaceUserData")
-    public void replaceUserData() {
+    @PutMapping("/replaceUserData/{phoneNumber}")
+    public String replaceUserData(
+            @PathVariable("phoneNumber") String phoneNumber,
+            @RequestBody Person updateData) {
+        log.info("Обновляем пользователя с номером телефона: {}", phoneNumber);
+
+        for (Person person : phoneDirectory) {
+            if (checksUsersByPhoneNumber(phoneNumber,person)) {
+                person.setFirstName(updateData.getFirstName());
+                person.setLastName(updateData.getLastName());
+                person.setPatronymic(updateData.getPatronymic());
+                person.setCityOfResidence(updateData.getCityOfResidence());
+                person.setAddress(updateData.getAddress());
+                person.setTypeofActivity(updateData.getTypeofActivity());
+
+                System.out.println(person.toString());
+                return "Пользователь обновлен!";
+            }
+        }
+        return "Такого пользователя нет!";
+    }
+
+    @DeleteMapping("/deleteUser/{phoneNumber}")
+    public String deleteUserOfPhoneNumber(@PathVariable("phoneNumber") String phoneNumber) {
+        log.info("Запрос на удаление пользователя с номером телефона: {}", phoneNumber);
+        if ( phoneDirectory.removeIf(p -> checksUsersByPhoneNumber(phoneNumber, p))) {
+           return "Пользователь с номером телефона " + phoneNumber + " удален";
+       } else {
+           return "Пользователя с данным номером телефона нет";
+       }
+
 
     }
+
 
 }

@@ -49,7 +49,7 @@ public class PhoneDirectory {
         return Optional.ofNullable(phoneDirectory)
                 .map(list -> list.stream()
                         .filter(Objects::nonNull)
-                        .filter(p -> p.getTypeofActivity().equals(profession))
+                        .filter(p -> p.getTypeofActivity().equalsIgnoreCase(profession))
                         .sorted((o1, o2) -> String.CASE_INSENSITIVE_ORDER
                                 .compare(o1.getCityOfResidence(), o2.getCityOfResidence()))
                         .collect(Collectors.toList()))
@@ -98,20 +98,24 @@ public class PhoneDirectory {
         return phoneDirectory.stream().map(Person::toString).toList();
     }
 
-    public static String addNewPerson(Person newPerson, List<Person> phoneDirectory){
+    public static String addNewPerson(Person newPerson, List<Person> phoneDirectory) {
         boolean isThereSuchPhoneNumber = phoneDirectory.stream()
-                .anyMatch(p ->
-                        newPerson.getPhoneNumber().substring(newPerson.getPhoneNumber().indexOf("-"))
-                                .replaceAll("^[0-9]", "")
-                        .equals(p.getPhoneNumber().substring(p.getPhoneNumber().indexOf("-"))
-                                .replaceAll("^[0-9]", "")));
+                .anyMatch(p -> checksUsersByPhoneNumber(newPerson.getPhoneNumber(), p));
 
         if (!isThereSuchPhoneNumber) {
             phoneDirectory.add(newPerson);
             return "Добавлен новый гражданин!";
         } else {
-            return "Пользователь с таким номером телефоан уже есть!";
+            return "Пользователь с таким номером телефона уже есть!";
         }
+    }
+
+    public static boolean checksUsersByPhoneNumber(String phoneNumber, Person person) {
+        return phoneNumber.substring(phoneNumber.indexOf("-"))
+                .replaceAll("^[0-9]", "")
+                .equals(person.getPhoneNumber()
+                        .substring(person.getPhoneNumber().indexOf("-"))
+                        .replaceAll("^[0-9]", ""));
     }
 
     public static void makeCall(Person person) {
