@@ -2,11 +2,13 @@ package ru.PhoneDirectory.controllerPhoneDirectory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumb;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
 import ru.PhoneDirectory.Person;
 import ru.PhoneDirectory.PhoneDirectory;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class Controller {
         return PhoneDirectory.findEveryoneWhoLivesInTheCityX(city, phoneDirectory);
     }
 
-    @GetMapping("/findPeopleWithoutPatronymic")
+    @GetMapping(value = "/findPeopleWithoutPatronymic", produces = "application/xml")
     public List<FullNamePhoneNumbAddress> returnPeopleWithoutPatronymic() {
         log.info("запрос на людей без отчества");
         return PhoneDirectory.findPeopleWithoutPatronymic(phoneDirectory);
@@ -47,6 +49,7 @@ public class Controller {
         return PhoneDirectory.findPeopleWithProfessionXAndSortByCity(profession, phoneDirectory);
     }
 
+    //Запрос в формате JSON и ответ в формате JSON
     @PostMapping(value = "/addsNewPerson", produces = MediaType.APPLICATION_JSON_VALUE) //возвращает Json
     public String addsANewPerson(@RequestBody Person person) {
         return PhoneDirectory.addNewPerson(person, phoneDirectory);
@@ -63,6 +66,20 @@ public class Controller {
     @PutMapping("/replaceUserData")
     public void replaceUserData() {
 
+    }
+
+    //ОСТАВИЛ дял примера
+    @GetMapping(value = "/stringAsJson", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getStringAsJson() {
+        return "{\"message\":\"Привет, мир!\"}";
+    }
+
+    @GetMapping("/responseEntityAsString")
+    public ResponseEntity<String> getResponseEntityAsString() {
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(JSONObject.quote("Когда жизнь дарит тебе лимоны, преврати их в JSON!"));
     }
 
 }
