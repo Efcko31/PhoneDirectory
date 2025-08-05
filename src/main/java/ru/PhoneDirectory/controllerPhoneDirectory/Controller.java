@@ -2,15 +2,16 @@ package ru.PhoneDirectory.controllerPhoneDirectory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumb;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
 import ru.PhoneDirectory.Person;
 import ru.PhoneDirectory.PhoneDirectory;
+import org.json.JSONObject;
 
 import java.util.List;
 
-import static ru.PhoneDirectory.PhoneDirectory.checksUsersByPhoneNumber;
 import static ru.PhoneDirectory.phoneDirectoryRepository.PersonsForPhoneDirectory.phoneDirectory;
 
 @RestController
@@ -36,7 +37,7 @@ public class Controller {
         return PhoneDirectory.findEveryoneWhoLivesInTheCityX(city, phoneDirectory);
     }
 
-    @GetMapping("/findPeopleWithoutPatronymic")
+    @GetMapping(value = "/findPeopleWithoutPatronymic", produces = "application/xml")
     public List<FullNamePhoneNumbAddress> returnPeopleWithoutPatronymic() {
         log.info("запрос на людей без отчества");
         return PhoneDirectory.findPeopleWithoutPatronymic(phoneDirectory);
@@ -48,6 +49,7 @@ public class Controller {
         return PhoneDirectory.findPeopleWithProfessionXAndSortByCity(profession, phoneDirectory);
     }
 
+    //Запрос в формате JSON и ответ в формате JSON
     @PostMapping(value = "/addsNewPerson", produces = MediaType.APPLICATION_JSON_VALUE) //возвращает Json
     public String addsANewPerson(@RequestBody Person person) {
         return PhoneDirectory.addNewPerson(person, phoneDirectory);
@@ -61,39 +63,23 @@ public class Controller {
     //    "address" : "улица Гринькова, д.33, кв.76",
     //    "typeofActivity" : "Таксист"
 
-    @PutMapping("/replaceUserData/{phoneNumber}")
-    public String replaceUserData(
-            @PathVariable("phoneNumber") String phoneNumber,
-            @RequestBody Person updateData) {
-        log.info("Обновляем пользователя с номером телефона: {}", phoneNumber);
-
-        for (Person person : phoneDirectory) {
-            if (checksUsersByPhoneNumber(phoneNumber,person)) {
-                person.setFirstName(updateData.getFirstName());
-                person.setLastName(updateData.getLastName());
-                person.setPatronymic(updateData.getPatronymic());
-                person.setCityOfResidence(updateData.getCityOfResidence());
-                person.setAddress(updateData.getAddress());
-                person.setTypeofActivity(updateData.getTypeofActivity());
-
-                System.out.println(person.toString());
-                return "Пользователь обновлен!";
-            }
-        }
-        return "Такого пользователя нет!";
-    }
-
-    @DeleteMapping("/deleteUser/{phoneNumber}")
-    public String deleteUserOfPhoneNumber(@PathVariable("phoneNumber") String phoneNumber) {
-        log.info("Запрос на удаление пользователя с номером телефона: {}", phoneNumber);
-        if ( phoneDirectory.removeIf(p -> checksUsersByPhoneNumber(phoneNumber, p))) {
-           return "Пользователь с номером телефона " + phoneNumber + " удален";
-       } else {
-           return "Пользователя с данным номером телефона нет";
-       }
-
+    @PutMapping("/replaceUserData")
+    public void replaceUserData() {
 
     }
 
+    //ОСТАВИЛ дял примера
+    @GetMapping(value = "/stringAsJson", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getStringAsJson() {
+        return "{\"message\":\"Привет, мир!\"}";
+    }
+
+    @GetMapping("/responseEntityAsString")
+    public ResponseEntity<String> getResponseEntityAsString() {
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(JSONObject.quote("Когда жизнь дарит тебе лимоны, преврати их в JSON!"));
+    }
 
 }
