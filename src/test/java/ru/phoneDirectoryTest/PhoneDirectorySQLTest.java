@@ -1,6 +1,8 @@
 package ru.phoneDirectoryTest;
 
 
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.PhoneDirectory.Person;
 import ru.PhoneDirectory.phoneDirectoryRepository.PhoneDirectoryRepository;
@@ -9,18 +11,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.PhoneDirectory.phoneDirectoryRepository.PersonsForPhoneDirectory.aleksandrAleksandrov;
 import static ru.PhoneDirectory.phoneDirectoryRepository.PhoneDirectoryRepository.findPeopleWithoutPatronymic;
 
 public class PhoneDirectorySQLTest {
     @Test
     void gettingDataDependingOnCityOfResidenceSQLTest() {
-        assertEquals(new Person("Николай", "Иванов", "Васильевич",
+        Assert.assertEquals(new Person("Николай", "Иванов", "Васильевич",
                 "+7-111-111-11-11"), getsUserDataAboutUserDependingOnCityResidence("Москва").getFirst());
-        assertEquals(List.of(), getsUserDataAboutUserDependingOnCityResidence(null));
-        assertEquals(List.of(), getsUserDataAboutUserDependingOnCityResidence("Севастополь"));
-        assertEquals(new Person("Петр", "Петров", "Петрович",
+        Assert.assertEquals(List.of(), getsUserDataAboutUserDependingOnCityResidence(null));
+        Assert.assertEquals(List.of(), getsUserDataAboutUserDependingOnCityResidence("Севастополь"));
+        Assert.assertEquals(new Person("Петр", "Петров", "Петрович",
                 "+7-222-222-22-22"), getsUserDataAboutUserDependingOnCityResidence("Санкт-Петербург").getFirst());
     }
 
@@ -47,8 +48,8 @@ public class PhoneDirectorySQLTest {
 
     @Test
     void searchForPersonPhoneNumberSQLTest() {
-        assertEquals(aleksandrAleksandrov.getPerson(), lookingForPersonByPhoneNumber("+7-444-444-44-44"));
-        assertEquals(null, lookingForPersonByPhoneNumber("+7-444-474-44-54"));
+        Assertions.assertEquals(aleksandrAleksandrov.getPerson(), lookingForPersonByPhoneNumber("+7-444-444-44-44"));
+        Assertions.assertEquals(null, lookingForPersonByPhoneNumber("+7-444-474-44-54"));
     }
 
     public Person lookingForPersonByPhoneNumber(String phoneNumber) {
@@ -64,8 +65,8 @@ public class PhoneDirectorySQLTest {
 
     @Test
     void findPeopleWithoutPatronymicSQLTest() throws SQLException {
-        assertEquals(3, findingPeopleWithoutPatronymic().size());
-        assertEquals("Москва", findPeopleWithoutPatronymic().getFirst().getCityOfResidence());
+        Assert.assertEquals(3, findingPeopleWithoutPatronymic().size());
+        Assert.assertEquals("Москва", findPeopleWithoutPatronymic().getFirst().getCityOfResidence());
     }
 
     public List<Person> findingPeopleWithoutPatronymic() {

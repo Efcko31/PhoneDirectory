@@ -1,5 +1,8 @@
 package ru.PhoneDirectory;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumb;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
 import ru.PhoneDirectory.mapper.FullNamePhoneNumbAddressMapper;
@@ -11,17 +14,20 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.sun.tools.attach.VirtualMachine.list;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PhoneDirectory {
+    private List<Person> personList;
 
     public static final String FULL_NAME_TYPE_ACTIVITY = "%s %s %s, %s\n";
     public static final String MASSAGE_BEGINNING_CALL = "Начат вызов. %s т.%s%n";
 
     //1)найти всех людей проживающих в городе n, и вернуть их номер телефона и фио
-    public static List<FullNamePhoneNumb> findEveryoneWhoLivesInTheCityX(
-            String cityN, List<Person> phoneDirectory) {
+    public List<FullNamePhoneNumb> findEveryoneWhoLivesInTheCityX(
+            String cityN) {
         return Optional.ofNullable(cityN)
-                .flatMap(city -> Optional.ofNullable(phoneDirectory)
+                .flatMap(city -> Optional.ofNullable(personList)
                         .map(list -> list.stream()
                                 .filter(Objects::nonNull)
                                 .filter(p -> cityN.equals(p.getCityOfResidence()))
@@ -32,8 +38,8 @@ public class PhoneDirectory {
     }
 
     //2)найти людей без отчества, и вернуть место их проживания, фио, номер телефона
-    public static List<FullNamePhoneNumbAddress> findPeopleWithoutPatronymic(List<Person> phoneDirectory) {
-        return Optional.ofNullable(phoneDirectory)
+    public List<FullNamePhoneNumbAddress> findPeopleWithoutPatronymic() {
+        return Optional.ofNullable(personList)
                 .map(list -> list.stream()
                         .filter(Objects::nonNull)
                         .filter(p -> p.getPatronymic() == null || p.getPatronymic().isEmpty())
@@ -44,9 +50,9 @@ public class PhoneDirectory {
     }
 
     //3)найти людей с профессией x, и вернуть информацию о них отсротирваную по городу
-    public static List<Person> findPeopleWithProfessionXAndSortByCity(
-            String profession, List<Person> phoneDirectory) {
-        return Optional.ofNullable(phoneDirectory)
+    public List<Person> findPeopleWithProfessionXAndSortByCity(
+            String profession) {
+        return Optional.ofNullable(personList)
                 .map(list -> list.stream()
                         .filter(Objects::nonNull)
                         .filter(p -> p.getTypeofActivity().equalsIgnoreCase(profession))
@@ -58,10 +64,10 @@ public class PhoneDirectory {
     }
 
     //4)найти n людей с определенной профессией
-    public static List<Person> findNPeopleWithTheSpecifiedProfession(String profession, int n, List<Person> phoneDirectory) {
-        if (profession == null || phoneDirectory == null || n <= 0) return List.of();
+    public List<Person> findNPeopleWithTheSpecifiedProfession(String profession, int n) {
+        if (profession == null || personList == null || n <= 0) return List.of();
 
-        List<Person> listPeopleWithProfessionN = Optional.of(phoneDirectory)
+        List<Person> listPeopleWithProfessionN = Optional.of(personList)
                 .map(list -> list.stream()
                         .filter(Objects::nonNull)
                         .filter(s -> profession.equals(s.getTypeofActivity()))
@@ -79,10 +85,10 @@ public class PhoneDirectory {
     }
 
     //5)осуществить прозвон всех людей с профессией x, с уточнением актуальности информации
-    public static List<Person> callAllPeopleWithProfessionX(String profession, List<Person> phoneDirectory) {
+    public List<Person> callAllPeopleWithProfessionX(String profession) {
         if (profession == null) return List.of();
 
-        List<Person> subscribersToWhomCallWasMade = Optional.ofNullable(phoneDirectory)
+        List<Person> subscribersToWhomCallWasMade = Optional.ofNullable(personList)
                 .map(list -> list.stream()
                         .filter(p -> profession.equals(p.getTypeofActivity()))
                         .toList())
@@ -94,16 +100,16 @@ public class PhoneDirectory {
         return subscribersToWhomCallWasMade;
     }
 
-    public static List<String> returnAllInformationAllPersons(List<Person> phoneDirectory) {
-        return phoneDirectory.stream().map(Person::toString).toList();
+    public List<String> returnAllInformationAllPersons() {
+        return personList.stream().map(Person::toString).toList();
     }
 
-    public static String addNewPerson(Person newPerson, List<Person> phoneDirectory) {
-        boolean isThereSuchPhoneNumber = phoneDirectory.stream()
+    public String addNewPerson(Person newPerson) {
+        boolean isThereSuchPhoneNumber = personList.stream()
                 .anyMatch(p -> checksUsersByPhoneNumber(newPerson.getPhoneNumber(), p));
 
         if (!isThereSuchPhoneNumber) {
-            phoneDirectory.add(newPerson);
+            personList.add(newPerson);
             return "Добавлен новый гражданин!";
         } else {
             return "Пользователь с таким номером телефона уже есть!";

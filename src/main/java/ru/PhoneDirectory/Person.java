@@ -34,7 +34,7 @@ public class Person extends Object {
     @Override
     public String toString() {
         return "ФИО: " + lastName + " " + firstName + " " + patronymic
-                + "; Гроод: " + cityOfResidence
+                + "; Город: " + cityOfResidence
                 + "; Адрес: " + address
                 + "; Профессия: " + typeofActivity
                 + "; Телефон: " + phoneNumber + ".";

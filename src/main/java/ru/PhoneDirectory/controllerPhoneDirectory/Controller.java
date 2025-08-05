@@ -1,17 +1,17 @@
 package ru.PhoneDirectory.controllerPhoneDirectory;
 
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumb;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
 import ru.PhoneDirectory.Person;
-import ru.PhoneDirectory.PhoneDirectory;
-import org.json.JSONObject;
 
 import java.util.List;
 
+import static ru.PhoneDirectory.Tests.Persons.PERSONS;
 import static ru.PhoneDirectory.phoneDirectoryRepository.PersonsForPhoneDirectory.phoneDirectory;
 
 @RestController
@@ -28,31 +28,31 @@ public class Controller {
     @GetMapping("/getAllInformationAllPersons")
     public List<String> returnAllInformationAllPersons() {
         log.info("запрос текстовой информации всех пользователей");
-        return PhoneDirectory.returnAllInformationAllPersons(phoneDirectory);
+        return PERSONS.returnAllInformationAllPersons();
     }
 
     @GetMapping("/findEveryoneWhoLivesInTheCity")
     public List<FullNamePhoneNumb> returnPersonsWhoLivesInTheCity(@RequestParam("city") String city) {
         log.info("запрос на жителей города: {}", city);
-        return PhoneDirectory.findEveryoneWhoLivesInTheCityX(city, phoneDirectory);
+        return PERSONS.findEveryoneWhoLivesInTheCityX(city);
     }
 
     @GetMapping(value = "/findPeopleWithoutPatronymic", produces = "application/xml")
     public List<FullNamePhoneNumbAddress> returnPeopleWithoutPatronymic() {
         log.info("запрос на людей без отчества");
-        return PhoneDirectory.findPeopleWithoutPatronymic(phoneDirectory);
+        return PERSONS.findPeopleWithoutPatronymic();
     }
 
     @GetMapping("/findPeopleWithProfessionX")
     public List<Person> findPeopleWithProfessionXAndSortByCity(@RequestParam("profession") String profession) {
         log.info("запрос на людей с профессией: {}", profession);
-        return PhoneDirectory.findPeopleWithProfessionXAndSortByCity(profession, phoneDirectory);
+        return PERSONS.findPeopleWithProfessionXAndSortByCity(profession);
     }
 
     //Запрос в формате JSON и ответ в формате JSON
     @PostMapping(value = "/addsNewPerson", produces = MediaType.APPLICATION_JSON_VALUE) //возвращает Json
     public String addsANewPerson(@RequestBody Person person) {
-        return PhoneDirectory.addNewPerson(person, phoneDirectory);
+        return PERSONS.addNewPerson(person);
 
     }
     //  "phoneNumber": "+7-888-858-88-00",

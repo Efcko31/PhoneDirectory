@@ -1,4 +1,4 @@
-package ru.phoneDirectoryTest;
+package ru.PhoneDirectory.Tests;
 
 import lombok.Getter;
 import ru.PhoneDirectory.Person;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public enum PersonsForPhoneDirectory {
+public enum Persons {
 
     nikolayIvanov(new Person(
             "+7-111-111-11-11",
@@ -92,11 +92,11 @@ public enum PersonsForPhoneDirectory {
             "Таксист"));
     private final Person person;
 
-    PersonsForPhoneDirectory(Person person) {
+    Persons(Person person) {
         this.person = person;
     }
 
-    public static final PhoneDirectory PHONE_DIRECTORY = new PhoneDirectory(new ArrayList<>(List.of(
+    public static final PhoneDirectory PERSONS = new PhoneDirectory(new ArrayList<>(List.of(
             nikolayIvanov.getPerson(), petrPetrov.getPerson(), ilyaIlyiyov.getPerson(), aleksandrAleksandrov.getPerson(),
             ivanovIvan.getPerson(), artemArtemov.getPerson(), olegOlegov.getPerson(), alekseyAlekseev.getPerson(),
             maksimMaksimov.getPerson(), denisDenisov.getPerson())));
