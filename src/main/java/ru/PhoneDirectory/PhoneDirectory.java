@@ -3,8 +3,10 @@ package ru.PhoneDirectory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumb;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
+import ru.PhoneDirectory.Tests.Persons;
 import ru.PhoneDirectory.mapper.FullNamePhoneNumbAddressMapper;
 import ru.PhoneDirectory.mapper.FullNamePhoneNumbMapper;
 
@@ -14,9 +16,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.sun.tools.attach.VirtualMachine.list;
+import static ru.PhoneDirectory.Tests.Persons.PERSONS;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Service
 public class PhoneDirectory {
     private List<Person> personList;
 

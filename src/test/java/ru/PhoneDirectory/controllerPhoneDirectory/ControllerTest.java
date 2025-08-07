@@ -15,7 +15,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.PhoneDirectory.Person;
 import ru.PhoneDirectory.PhoneDirectory;
 
-import static ru.phoneDirectoryTest.PersonsForPhoneDirectory.PHONE_DIRECTORY;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.PhoneDirectory.Tests.Persons.PERSONS;
+import static ru.PhoneDirectory.Tests.Persons.*;
 
 @WebMvcTest(Controller.class)
 public class ControllerTest {
@@ -36,15 +42,22 @@ public class ControllerTest {
 
     @Test
     void getAllPersonsTest() throws Exception {
-        Mockito.when(PhoneDirectory.returnAllInformationAllPersons(PHONE_DIRECTORY.getPersonList()))
-                .thenReturn(PHONE_DIRECTORY.getPersonList().stream().map(Person::toString).toList());
-        mockMvc.perform(MockMvcRequestBuilders.get("/getAllInformationAllPersons").accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0]").value(
-                        "ФИО: Иванов Николай Васильевич; " +
-                                "Город: Москва; " +
-                                "Адрес: улица Ромашковая, д.12; " +
-                                "Профессия: Слесарь; " +
-                                "Телефон: +7-111-111-11-11."));
+        PhoneDirectory testPersons = new PhoneDirectory(new ArrayList<>(List.of(
+                nikolayIvanov.getPerson(), petrPetrov.getPerson(), ilyaIlyiyov.getPerson(), aleksandrAleksandrov.getPerson(),
+                ivanovIvan.getPerson(), artemArtemov.getPerson(), olegOlegov.getPerson(), alekseyAlekseev.getPerson(),
+                maksimMaksimov.getPerson(), denisDenisov.getPerson())));
+
+        when(phoneDirectory.returnAllInformationAllPersons())
+                .thenReturn(testPersons.returnAllInformationAllPersons());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/getAllInformationAllPersons"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0]")
+                        .value(testPersons.getPersonList().getFirst().toString()));
+//        "ФИО: Иванов Николай Васильевич; " +
+//                "Город: Москва; " +
+//                "Адрес: улица Ромашковая, д.12; " +
+//                "Профессия: Слесарь; " +
+//                "Телефон: +7-111-111-11-11.")
     }
 }

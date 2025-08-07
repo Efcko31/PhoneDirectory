@@ -96,7 +96,7 @@ public enum Persons {
         this.person = person;
     }
 
-    public static final PhoneDirectory PERSONS = new PhoneDirectory(new ArrayList<>(List.of(
+    public static PhoneDirectory PERSONS = new PhoneDirectory(new ArrayList<>(List.of(
             nikolayIvanov.getPerson(), petrPetrov.getPerson(), ilyaIlyiyov.getPerson(), aleksandrAleksandrov.getPerson(),
             ivanovIvan.getPerson(), artemArtemov.getPerson(), olegOlegov.getPerson(), alekseyAlekseev.getPerson(),
             maksimMaksimov.getPerson(), denisDenisov.getPerson())));
