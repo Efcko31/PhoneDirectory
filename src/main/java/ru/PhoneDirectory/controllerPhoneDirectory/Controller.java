@@ -1,8 +1,10 @@
 package ru.PhoneDirectory.controllerPhoneDirectory;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +15,14 @@ import ru.PhoneDirectory.PhoneDirectory;
 
 import java.util.List;
 
-import static ru.PhoneDirectory.Tests.Persons.PERSONS;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @RestController
 @RequestMapping("/phoneDirectory")
 @Slf4j
 public class Controller {
 
-    @Autowired
     private PhoneDirectory phoneDirectory;
 
     @GetMapping("/getAllPersons")
@@ -54,8 +56,9 @@ public class Controller {
     }
 
     //Запрос в формате JSON и ответ в формате JSON
-    @PostMapping(value = "/addsNewPerson", produces = MediaType.APPLICATION_JSON_VALUE) //возвращает Json
-    public String addsANewPerson(@RequestBody Person person) {
+    @PostMapping(value = "/addNewPerson", produces = MediaType.APPLICATION_JSON_VALUE) //возвращает Json
+    public String addNewPerson(@RequestBody Person person) {
+        log.info("запрос на добавление нового товарища!");
         return phoneDirectory.addNewPerson(person);
 
     }
@@ -67,8 +70,8 @@ public class Controller {
     //    "address" : "улица Гринькова, д.33, кв.76",
     //    "typeofActivity" : "Таксист"
 
-    @PostMapping(value = "/addsNewPersonFormatXML", consumes = "application/xml", produces = "application/xml")
-    public String addsANewPersonFormatXML(@RequestBody Person person) {
+    @PostMapping(value = "/addNewPersonFormatXML", consumes = "application/xml", produces = "application/xml")
+    public String addANewPersonFormatXML(@RequestBody Person person) {
         return phoneDirectory.addNewPerson(person);
     }
     //<person>

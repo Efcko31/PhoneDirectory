@@ -6,8 +6,8 @@ import ru.PhoneDirectory.Person;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-08-07T07:53:57+0300",
-    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2025-08-07T12:04:16+0300",
+    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Microsoft)"
 )
 public class FullNamePhoneNumbAddressMapperImpl implements FullNamePhoneNumbAddressMapper {
 
