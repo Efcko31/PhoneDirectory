@@ -8,7 +8,7 @@ import ru.PhoneDirectory.PhoneDirectory;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static ru.PhoneDirectory.PhoneDirectory.*;
 import static ru.phoneDirectoryTest.PersonsForPhoneDirectory.*;
 
@@ -78,6 +78,13 @@ public class PhoneDirectoryTest {
                 "Санкт-Петербург",
                 "улица Гринькова, д.33, кв.76",
                 "Таксист"));
+    }
+
+    @Test
+    void deletePersonByPhoneNumber() {
+        assertTrue(PHONE_DIRECTORY.deletePerson("+7-111-111-11-11"));
+        assertFalse(PHONE_DIRECTORY.deletePerson("+7-123-333-42-11"));
+        assertFalse(PHONE_DIRECTORY.deletePerson("+7-111-000-11-11"));
     }
 
 

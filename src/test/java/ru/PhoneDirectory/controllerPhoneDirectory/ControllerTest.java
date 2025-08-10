@@ -13,6 +13,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.PhoneDirectory.Person;
 import ru.PhoneDirectory.PhoneDirectory;
 
+import java.beans.Encoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -30,14 +33,11 @@ public class ControllerTest {
     @Mock
     private PhoneDirectory phoneDirectory;
 
-    // @InjectMocks
-    // private Controller controller;
-
     @BeforeEach
     void setup() {
         Controller controller = new Controller(phoneDirectory);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-        //MockitoAnnotations.openMocks(this);
+
     }
 
     public PhoneDirectory testPersons = new PhoneDirectory(List.of(
@@ -59,14 +59,6 @@ public class ControllerTest {
 
     @Test
     void addsANewPersonTest() throws Exception {
-//        Person newPerson = new Person(
-//        "+7-888-858-88-00",
-//                "Алексей",
-//                "Алексеев",
-//                "",
-//                "Санкт-Петербург",
-//                "улица Гринькова, д.33, кв.76",
-//                "Таксист");
 
         when(phoneDirectory.addNewPerson(any(Person.class))).thenReturn("Добавлен новый гражданин!");
 
@@ -84,5 +76,24 @@ public class ControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string("Добавлен новый гражданин!"));
+
+    }
+
+    @Test
+    void deletePersonByPhoneNumberTest() throws Exception {
+        String phoneNumber = "+7-111-111-11-11";
+
+        when(phoneDirectory.deletePerson(phoneNumber)).thenReturn(true);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/phoneDirectory/deletePerson/" + phoneNumber)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+
+
+        when(phoneDirectory.deletePerson("+7-111-000-11-11")).thenReturn(false);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/phoneDirectory/deletePerson/+7-111-000-11-11")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("false"));
     }
 }

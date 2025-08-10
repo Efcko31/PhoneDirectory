@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumb;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
-import ru.PhoneDirectory.Tests.Persons;
 import ru.PhoneDirectory.mapper.FullNamePhoneNumbAddressMapper;
 import ru.PhoneDirectory.mapper.FullNamePhoneNumbMapper;
 
@@ -16,7 +15,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.sun.tools.attach.VirtualMachine.list;
-import static ru.PhoneDirectory.Tests.Persons.PERSONS;
 
 @Data
 @AllArgsConstructor
@@ -100,7 +98,8 @@ public class PhoneDirectory {
                 .filter(list -> !list.isEmpty())
                 .orElseGet(List::of);
 
-        subscribersToWhomCallWasMade.forEach(PhoneDirectory::makeCall);
+        subscribersToWhomCallWasMade.forEach(p ->
+                System.out.printf(MASSAGE_BEGINNING_CALL, p.getFirstName(), p.getPhoneNumber()));
         System.out.println("-------------------------");
         return subscribersToWhomCallWasMade;
     }
@@ -121,7 +120,25 @@ public class PhoneDirectory {
         }
     }
 
-    public static boolean checksUsersByPhoneNumber(String phoneNumber, Person person) {
+    public boolean deletePerson(String phoneNumber) {
+        return personList.remove(findPersonByPhoneNumber(phoneNumber));
+    }
+
+    public Person findPersonByPhoneNumber(String phoneNumber) {
+        for (Person p : personList) {
+            if (checksUsersByPhoneNumber(phoneNumber, p)) {
+                return p;
+            }
+        }
+        System.out.println("такого пользователя нет!");
+        return null;
+//        return personList.stream()
+//                .filter(p -> checksUsersByPhoneNumber(phoneNumber, p))
+//                .findFirst()
+//                .orElse();
+    }
+
+    private boolean checksUsersByPhoneNumber(String phoneNumber, Person person) {
         return phoneNumber.substring(phoneNumber.indexOf("-"))
                 .replaceAll("^[0-9]", "")
                 .equals(person.getPhoneNumber()
@@ -129,7 +146,7 @@ public class PhoneDirectory {
                         .replaceAll("^[0-9]", ""));
     }
 
-    public static void makeCall(Person person) {
-        System.out.printf(MASSAGE_BEGINNING_CALL, person.getFirstName(), person.getPhoneNumber());
-    }
+//    public void makeCall(Person person) {
+//        System.out.printf(MASSAGE_BEGINNING_CALL, person.getFirstName(), person.getPhoneNumber());
+//    }
 }

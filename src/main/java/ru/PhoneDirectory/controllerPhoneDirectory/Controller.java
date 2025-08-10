@@ -15,6 +15,8 @@ import ru.PhoneDirectory.PhoneDirectory;
 
 import java.util.List;
 
+import static ru.PhoneDirectory.Tests.Persons.PERSONS;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +25,7 @@ import java.util.List;
 @Slf4j
 public class Controller {
 
-    private PhoneDirectory phoneDirectory;
+    private PhoneDirectory phoneDirectory = PERSONS;
 
     @GetMapping("/getAllPersons")
     public List<Person> returnAllPersons() {
@@ -60,20 +62,21 @@ public class Controller {
     public String addNewPerson(@RequestBody Person person) {
         log.info("запрос на добавление нового товарища!");
         return phoneDirectory.addNewPerson(person);
-
+        //  "phoneNumber": "+7-888-858-88-00",
+        //    "firstName" : "Алексей",
+        //    "LastName" : "Алексеев",
+        //    "patronymic" : "",
+        //    "cityOfResidence" :"Санкт-Петербург",
+        //    "address" : "улица Гринькова, д.33, кв.76",
+        //    "typeofActivity" : "Таксист"
     }
-    //  "phoneNumber": "+7-888-858-88-00",
-    //    "firstName" : "Алексей",
-    //    "LastName" : "Алексеев",
-    //    "patronymic" : "",
-    //    "cityOfResidence" :"Санкт-Петербург",
-    //    "address" : "улица Гринькова, д.33, кв.76",
-    //    "typeofActivity" : "Таксист"
+
 
     @PostMapping(value = "/addNewPersonFormatXML", consumes = "application/xml", produces = "application/xml")
     public String addANewPersonFormatXML(@RequestBody Person person) {
         return phoneDirectory.addNewPerson(person);
     }
+
     //<person>
     //    <phoneNumber>+7-888-858-88-00"</phoneNumber>
     //    <firstName>Алексей</firstName>
@@ -87,6 +90,12 @@ public class Controller {
     @PutMapping("/replaceUserData")
     public void replaceUserData() {//todo
 
+    }
+
+    @DeleteMapping("/deletePerson/{phoneNumber}")
+    public boolean deletePerson(@PathVariable("phoneNumber") String phoneNumberDeletedPerson) {
+        log.info("Запрос на удаление пользователя с номером телефона {}", phoneNumberDeletedPerson);
+        return phoneDirectory.deletePerson(phoneNumberDeletedPerson);
     }
 
     //ОСТАВИЛ дял примера
