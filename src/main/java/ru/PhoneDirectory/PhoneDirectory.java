@@ -9,6 +9,7 @@ import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
 import ru.PhoneDirectory.mapper.FullNamePhoneNumbAddressMapper;
 import ru.PhoneDirectory.mapper.FullNamePhoneNumbMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -130,12 +131,41 @@ public class PhoneDirectory {
                 return p;
             }
         }
-        System.out.println("такого пользователя нет!");
+        System.out.println("Пользователя с таким номером нет!");
         return null;
-//        return personList.stream()
-//                .filter(p -> checksUsersByPhoneNumber(phoneNumber, p))
-//                .findFirst()
-//                .orElse();
+    }
+
+    public boolean replaceUserData(String phoneNumber, String field, String data) {
+        Person replacedUser = findPersonByPhoneNumber(phoneNumber);
+        if (replacedUser != null) {
+            switch (field.toLowerCase()) {
+                case "phonenumber":
+                    replacedUser.setPhoneNumber(data);
+                    break;
+                case "firstname":
+                    replacedUser.setFirstName(data);
+                    break;
+                case "lastname":
+                    replacedUser.setLastName(data);
+                    break;
+                case "patronymic":
+                    replacedUser.setPatronymic(data);
+                    break;
+                case "cityofresidence":
+                    replacedUser.setCityOfResidence(data);
+                    break;
+                case "address":
+                    replacedUser.setAddress(data);
+                    break;
+                case "typeofactivity":
+                    replacedUser.setTypeofActivity(data);
+                    break;
+            }
+            System.out.println("Данные изменены!");
+            System.out.println(replacedUser.toString());
+            return true;
+        }
+        return false;
     }
 
     private boolean checksUsersByPhoneNumber(String phoneNumber, Person person) {

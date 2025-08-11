@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumb;
 import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
+import ru.PhoneDirectory.DTO.UpdateRequest;
 import ru.PhoneDirectory.Person;
 import ru.PhoneDirectory.PhoneDirectory;
 
@@ -87,10 +88,20 @@ public class Controller {
     //    <typeofActivity>Таксист</typeofActivity>
     //</person>
 
-    @PutMapping("/replaceUserData")
-    public void replaceUserData() {//todo
+    @PutMapping(value = "/replaceUserData/{phoneNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean replaceUserData(@PathVariable("phoneNumber") String phoneNumber,
+                                   @RequestBody UpdateRequest request) {
+
+        log.info("запрос на изменение данных о пользователе с номером: {}", phoneNumber);
+        log.info("поле: {}; данные: {}", request.getField(), request.getData());
+        return phoneDirectory.replaceUserData(phoneNumber, request.getField(), request.getData());
 
     }
+    // {
+    // "phoneNumber" : "+7-111-111-11-11",
+    // "field" : "lastName",
+    // "data" : "Горький"
+    // }
 
     @DeleteMapping("/deletePerson/{phoneNumber}")
     public boolean deletePerson(@PathVariable("phoneNumber") String phoneNumberDeletedPerson) {
@@ -98,7 +109,7 @@ public class Controller {
         return phoneDirectory.deletePerson(phoneNumberDeletedPerson);
     }
 
-    //ОСТАВИЛ дял примера
+    //ОСТАВИЛ для примера
     @GetMapping(value = "/stringAsJson", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getStringAsJson() {
         return "{\"message\":\"Привет, мир!\"}";

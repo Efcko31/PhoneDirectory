@@ -87,6 +87,14 @@ public class PhoneDirectoryTest {
         assertFalse(PHONE_DIRECTORY.deletePerson("+7-111-000-11-11"));
     }
 
+    @Test
+    void replaceUserDataTest() {
+        assertTrue(PHONE_DIRECTORY.replaceUserData("+7-999-999-99-99", "lastName", "Грачевский"));
+        assertTrue(PHONE_DIRECTORY.replaceUserData("+7-111-111-11-11", "phoneNUMBER", "8-911-321-43-21"));
+        assertFalse(PHONE_DIRECTORY.replaceUserData("+7-111-000-11-11", "phoneNUMBER", "8-911-321-43-21"));
+
+    }
+
 
 
 }

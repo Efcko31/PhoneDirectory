@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ru.PhoneDirectory.DTO.UpdateRequest;
 import ru.PhoneDirectory.Person;
 import ru.PhoneDirectory.PhoneDirectory;
 
@@ -81,19 +82,34 @@ public class ControllerTest {
 
     @Test
     void deletePersonByPhoneNumberTest() throws Exception {
-        String phoneNumber = "+7-111-111-11-11";
 
-        when(phoneDirectory.deletePerson(phoneNumber)).thenReturn(true);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/phoneDirectory/deletePerson/" + phoneNumber)
+        when(phoneDirectory.deletePerson("+7-111-111-11-11")).thenReturn(true);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/phoneDirectory/deletePerson/" + "+7-111-111-11-11")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
-
 
         when(phoneDirectory.deletePerson("+7-111-000-11-11")).thenReturn(false);
         mockMvc.perform(MockMvcRequestBuilders.delete("/phoneDirectory/deletePerson/+7-111-000-11-11")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("false"));
+    }
+
+    @Test
+    void replaceUserDataTest() throws Exception {
+        UpdateRequest requestTest = new UpdateRequest("lastName", "Грачевский");
+        when(phoneDirectory.replaceUserData("+7-999-999-99-99",
+                requestTest.getField(), requestTest.getData())).thenReturn(true);
+        mockMvc.perform(MockMvcRequestBuilders.put("/phoneDirectory/replaceUserData/+7-999-999-99-99")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "\"field\" : \"lastName\",\n" +
+                                "\"data\" : \"Грачевский\"" +
+                                "}")
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
     }
 }
