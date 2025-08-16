@@ -14,15 +14,11 @@ import ru.PhoneDirectory.DTO.UpdateRequest;
 import ru.PhoneDirectory.Person;
 import ru.PhoneDirectory.PhoneDirectory;
 
-import java.beans.Encoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.PhoneDirectory.Tests.Persons.*;
 
 @WebMvcTest(Controller.class)
@@ -36,8 +32,7 @@ public class ControllerTest {
 
     @BeforeEach
     void setup() {
-        Controller controller = new Controller(phoneDirectory);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new Controller(phoneDirectory)).build();
 
     }
 
@@ -57,6 +52,45 @@ public class ControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0]")
                         .value(testPersons.getPersonList().getFirst().toString()));
     }
+
+    @Test
+    void getPersonsWhoLivesInTheCityTest() throws Exception {
+        when(phoneDirectory.findEveryoneWhoLivesInTheCityX("Москва"))
+                .thenReturn(testPersons.findEveryoneWhoLivesInTheCityX("Москва"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/phoneDirectory/findEveryoneWhoLivesInTheCity")
+                        .param("city", "Москва")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].phoneNumber")
+                        .value("+7-111-111-11-11"));
+
+        when(phoneDirectory.findEveryoneWhoLivesInTheCityX("Москва"))
+                .thenReturn(testPersons.findEveryoneWhoLivesInTheCityX("Москва"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/phoneDirectory/findEveryoneWhoLivesInTheCity")
+                        .param("city", "Москва")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[-1].phoneNumber")
+                        .value("+7-777-777-77-77"));
+    }
+
+    @Test
+    void getPeopleWithoutPatronymic() throws Exception {
+        when(phoneDirectory.findPeopleWithoutPatronymic())
+                .thenReturn(testPersons.findPeopleWithoutPatronymic());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/phoneDirectory/findPeopleWithoutPatronymic")
+                        .accept(MediaType.APPLICATION_XML))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_XML))
+                .andExpect(xpath("count(/List/FullNamePhoneNumbAddress)").number(2.0))
+                .andExpect(xpath("/List/PhoneDirectory[1]/lastName").string("Олегов"))
+                .andExpect(xpath("List/PhoneDirectory[2]/lastName").string("Алексеев"));
+
+    }
+
 
     @Test
     void addsANewPersonTest() throws Exception {
@@ -84,7 +118,7 @@ public class ControllerTest {
     void deletePersonByPhoneNumberTest() throws Exception {
 
         when(phoneDirectory.deletePerson("+7-111-111-11-11")).thenReturn(true);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/phoneDirectory/deletePerson/" + "+7-111-111-11-11")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/phoneDirectory/deletePerson/+7-111-111-11-11")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
