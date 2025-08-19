@@ -1,68 +1,68 @@
 package ru.PhoneDirectory.controllerPhoneDirectory;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.PhoneDirectory.DTO.FullNamePhoneNumb;
-import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
-import ru.PhoneDirectory.DTO.UpdateRequest;
+import ru.PhoneDirectory.dto.FullNamePhoneNumb;
+import ru.PhoneDirectory.dto.FullNamePhoneNumbAddress;
+import ru.PhoneDirectory.dto.UpdateRequest;
 import ru.PhoneDirectory.Person;
-import ru.PhoneDirectory.PhoneDirectory;
+import ru.PhoneDirectory.PhoneDirectoryService;
 
 import java.util.List;
 
-import static ru.PhoneDirectory.Tests.Persons.PERSONS;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @RestController
 @RequestMapping("/phoneDirectory")
-@Slf4j
+@Slf4j //логирование
 public class Controller {
 
-    private PhoneDirectory phoneDirectory = PERSONS;
+    private final PhoneDirectoryService phoneDirectoryService;
+
+    @Autowired
+    public Controller(PhoneDirectoryService phoneDirectoryService) {
+        this.phoneDirectoryService = phoneDirectoryService;
+    }
 
     @GetMapping("/getAllPersons")
     public List<Person> returnAllPersons() {
         log.info("запрос на всех пользователей");
-        return phoneDirectory.getPersonList();
+        return PhoneDirectoryService.PERSON_LIST;//todo херня получилась
     }
 
     @GetMapping("/getAllInformationAllPersons")
     public List<String> returnAllInformationAllPersons() {
         log.info("запрос текстовой информации всех пользователей");
-        return phoneDirectory.returnAllInformationAllPersons();
+        return phoneDirectoryService.returnAllInformationAllPersons();
     }
 
     @GetMapping("/findEveryoneWhoLivesInTheCity")
     public List<FullNamePhoneNumb> returnPersonsWhoLivesInTheCity(@RequestParam("city") String city) {
         log.info("запрос на жителей города: {}", city);
-        return phoneDirectory.findEveryoneWhoLivesInTheCityX(city);
+        return phoneDirectoryService.findEveryoneWhoLivesInTheCityX(city);
     }
 
     @GetMapping(value = "/findPeopleWithoutPatronymic", produces = "application/xml")
     public List<FullNamePhoneNumbAddress> returnPeopleWithoutPatronymic() {
         log.info("запрос на людей без отчества");
-        return phoneDirectory.findPeopleWithoutPatronymic();
+        return phoneDirectoryService.findPeopleWithoutPatronymic();
     }
 
     @GetMapping("/findPeopleWithProfessionX")
     public List<Person> findPeopleWithProfessionXAndSortByCity(@RequestParam("profession") String profession) {
         log.info("запрос на людей с профессией: {}", profession);
-        return phoneDirectory.findPeopleWithProfessionXAndSortByCity(profession);
+        return phoneDirectoryService.findPeopleWithProfessionXAndSortByCity(profession);
     }
 
     //Запрос в формате JSON и ответ в формате JSON
     @PostMapping(value = "/addNewPerson", produces = MediaType.APPLICATION_JSON_VALUE) //возвращает Json
     public String addNewPerson(@RequestBody Person person) {
         log.info("запрос на добавление нового товарища!");
-        return phoneDirectory.addNewPerson(person);
+        return phoneDirectoryService.addNewPerson(person);
         //  "phoneNumber": "+7-888-858-88-00",
         //    "firstName" : "Алексей",
         //    "LastName" : "Алексеев",
@@ -75,7 +75,7 @@ public class Controller {
 
     @PostMapping(value = "/addNewPersonFormatXML", consumes = "application/xml", produces = "application/xml")
     public String addANewPersonFormatXML(@RequestBody Person person) {
-        return phoneDirectory.addNewPerson(person);
+        return phoneDirectoryService.addNewPerson(person);
     }
 
     //<person>
@@ -94,7 +94,7 @@ public class Controller {
 
         log.info("запрос на изменение данных о пользователе с номером: {}", phoneNumber);
         log.info("поле: {}; данные: {}", request.getField(), request.getData());
-        return phoneDirectory.replaceUserData(phoneNumber, request.getField(), request.getData());
+        return phoneDirectoryService.replaceUserData(phoneNumber, request.getField(), request.getData());
 
     }
     // {
@@ -106,7 +106,7 @@ public class Controller {
     @DeleteMapping("/deletePerson/{phoneNumber}")
     public boolean deletePerson(@PathVariable("phoneNumber") String phoneNumberDeletedPerson) {
         log.info("Запрос на удаление пользователя с номером телефона {}", phoneNumberDeletedPerson);
-        return phoneDirectory.deletePerson(phoneNumberDeletedPerson);
+        return phoneDirectoryService.deletePerson(phoneNumberDeletedPerson);
     }
 
     //ОСТАВИЛ для примера
@@ -115,12 +115,9 @@ public class Controller {
         return "{\"message\":\"Привет, мир!\"}";
     }
 
-    @GetMapping("/responseEntityAsString")
+    @GetMapping(value = "/responseEntityAsString", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<String> getResponseEntityAsString() {
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(JSONObject.quote("Когда жизнь дарит тебе лимоны, преврати их в JSON!"));
+        return ResponseEntity.ok("Когда жизнь дарит тебе лимоны, преврати их в JSON!");
     }
 
 }

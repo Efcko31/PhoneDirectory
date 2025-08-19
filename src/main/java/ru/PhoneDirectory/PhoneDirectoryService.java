@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.PhoneDirectory.DTO.FullNamePhoneNumb;
-import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
+import ru.PhoneDirectory.dto.FullNamePhoneNumb;
+import ru.PhoneDirectory.dto.FullNamePhoneNumbAddress;
 import ru.PhoneDirectory.mapper.FullNamePhoneNumbAddressMapper;
 import ru.PhoneDirectory.mapper.FullNamePhoneNumbMapper;
 
@@ -16,13 +16,31 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.sun.tools.attach.VirtualMachine.list;
+import static ru.PhoneDirectory.enums.Persons.ALEKSANDR_ALEKSANDROV;
+import static ru.PhoneDirectory.enums.Persons.ALEKSEY_ALEKSEEV;
+import static ru.PhoneDirectory.enums.Persons.ARTEM_ARTEMOV;
+import static ru.PhoneDirectory.enums.Persons.DENIS_DENISOV;
+import static ru.PhoneDirectory.enums.Persons.ILYA_ILYIYOV;
+import static ru.PhoneDirectory.enums.Persons.IVANOV_IVAN;
+import static ru.PhoneDirectory.enums.Persons.MAKSIM_MAKSIMOV;
+import static ru.PhoneDirectory.enums.Persons.NIKOLAY_IVANOV;
+import static ru.PhoneDirectory.enums.Persons.OLEG_OLEGOV;
+import static ru.PhoneDirectory.enums.Persons.PETR_PETROV;
+//todo не должно * в импортах
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Service
-public class PhoneDirectory {
-    private List<Person> personList;
+public class PhoneDirectoryService {
+
+    public static List<Person> PERSON_LIST = new ArrayList<>(List.of(
+            NIKOLAY_IVANOV.getPerson(), PETR_PETROV.getPerson(), ILYA_ILYIYOV.getPerson(), ALEKSANDR_ALEKSANDROV.getPerson(),
+            IVANOV_IVAN.getPerson(), ARTEM_ARTEMOV.getPerson(), OLEG_OLEGOV.getPerson(), ALEKSEY_ALEKSEEV.getPerson(),
+            MAKSIM_MAKSIMOV.getPerson(), DENIS_DENISOV.getPerson()));
+
+    //todo надо убрать, что бы работать только с enum
+    //todo метод на получение все в enum
 
     public static final String FULL_NAME_TYPE_ACTIVITY = "%s %s %s, %s\n";
     public static final String MASSAGE_BEGINNING_CALL = "Начат вызов. %s т.%s%n";
@@ -31,7 +49,7 @@ public class PhoneDirectory {
     public List<FullNamePhoneNumb> findEveryoneWhoLivesInTheCityX(
             String cityN) {
         return Optional.ofNullable(cityN)
-                .flatMap(city -> Optional.ofNullable(personList)
+                .flatMap(city -> Optional.ofNullable(PERSON_LIST)
                         .map(list -> list.stream()
                                 .filter(Objects::nonNull)
                                 .filter(p -> cityN.equals(p.getCityOfResidence()))
@@ -43,7 +61,7 @@ public class PhoneDirectory {
 
     //2)найти людей без отчества, и вернуть место их проживания, фио, номер телефона
     public List<FullNamePhoneNumbAddress> findPeopleWithoutPatronymic() {
-        return Optional.ofNullable(personList)
+        return Optional.ofNullable(PERSON_LIST)
                 .map(list -> list.stream()
                         .filter(Objects::nonNull)
                         .filter(p -> p.getPatronymic() == null || p.getPatronymic().isEmpty())
@@ -56,7 +74,7 @@ public class PhoneDirectory {
     //3)найти людей с профессией x, и вернуть информацию о них отсротирваную по городу
     public List<Person> findPeopleWithProfessionXAndSortByCity(
             String profession) {
-        return Optional.ofNullable(personList)
+        return Optional.ofNullable(PERSON_LIST)
                 .map(list -> list.stream()
                         .filter(Objects::nonNull)
                         .filter(p -> p.getTypeofActivity().equalsIgnoreCase(profession))
@@ -69,9 +87,9 @@ public class PhoneDirectory {
 
     //4)найти n людей с определенной профессией
     public List<Person> findNPeopleWithTheSpecifiedProfession(String profession, int n) {
-        if (profession == null || personList == null || n <= 0) return List.of();
+        if (profession == null || PERSON_LIST == null || n <= 0) return List.of();
 
-        List<Person> listPeopleWithProfessionN = Optional.of(personList)
+        List<Person> listPeopleWithProfessionN = Optional.of(PERSON_LIST)
                 .map(list -> list.stream()
                         .filter(Objects::nonNull)
                         .filter(s -> profession.equals(s.getTypeofActivity()))
@@ -92,7 +110,7 @@ public class PhoneDirectory {
     public List<Person> callAllPeopleWithProfessionX(String profession) {
         if (profession == null) return List.of();
 
-        List<Person> subscribersToWhomCallWasMade = Optional.ofNullable(personList)
+        List<Person> subscribersToWhomCallWasMade = Optional.ofNullable(PERSON_LIST)
                 .map(list -> list.stream()
                         .filter(p -> profession.equals(p.getTypeofActivity()))
                         .toList())
@@ -106,15 +124,15 @@ public class PhoneDirectory {
     }
 
     public List<String> returnAllInformationAllPersons() {
-        return personList.stream().map(Person::toString).toList();
+        return PERSON_LIST.stream().map(Person::toString).toList();
     }
 
     public String addNewPerson(Person newPerson) {
-        boolean isThereSuchPhoneNumber = personList.stream()
+        boolean isThereSuchPhoneNumber = PERSON_LIST.stream()
                 .anyMatch(p -> checksUsersByPhoneNumber(newPerson.getPhoneNumber(), p));
 
         if (!isThereSuchPhoneNumber) {
-            personList.add(newPerson);
+            PERSON_LIST.add(newPerson);
             return "Добавлен новый гражданин!";
         } else {
             return "Пользователь с таким номером телефона уже есть!";
@@ -122,16 +140,16 @@ public class PhoneDirectory {
     }
 
     public boolean deletePerson(String phoneNumber) {
-        return personList.remove(findPersonByPhoneNumber(phoneNumber));
+        return PERSON_LIST.remove(findPersonByPhoneNumber(phoneNumber));
     }
 
     public Person findPersonByPhoneNumber(String phoneNumber) {
-        for (Person p : personList) {
+        for (Person p : PERSON_LIST) {
             if (checksUsersByPhoneNumber(phoneNumber, p)) {
                 return p;
             }
         }
-        System.out.println("Пользователя с таким номером нет!");
+        System.out.println("Пользователя с таким номером нет!"); //exception
         return null;
     }
 
@@ -162,7 +180,7 @@ public class PhoneDirectory {
                     break;
             }
             System.out.println("Данные изменены!");
-            System.out.println(replacedUser.toString());
+            System.out.println(replacedUser);
             return true;
         }
         return false;

@@ -14,7 +14,7 @@ import java.util.List;
 import static ru.PhoneDirectory.phoneDirectoryRepository.PersonsForPhoneDirectory.aleksandrAleksandrov;
 import static ru.PhoneDirectory.phoneDirectoryRepository.PhoneDirectoryRepository.findPeopleWithoutPatronymic;
 
-public class PhoneDirectorySQLTest {
+public class PhoneDirectoryServiceSQLTest {
     @Test
     void gettingDataDependingOnCityOfResidenceSQLTest() {
         Assert.assertEquals(new Person("Николай", "Иванов", "Васильевич",

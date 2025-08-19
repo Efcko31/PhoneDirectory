@@ -1,4 +1,4 @@
-package ru.PhoneDirectory.DTO;
+package ru.PhoneDirectory.dto;
 
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;

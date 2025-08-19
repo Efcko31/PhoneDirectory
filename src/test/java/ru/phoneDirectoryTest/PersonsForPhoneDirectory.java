@@ -2,7 +2,7 @@ package ru.phoneDirectoryTest;
 
 import lombok.Getter;
 import ru.PhoneDirectory.Person;
-import ru.PhoneDirectory.PhoneDirectory;
+import ru.PhoneDirectory.PhoneDirectoryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +96,7 @@ public enum PersonsForPhoneDirectory {
         this.person = person;
     }
 
-    public static final PhoneDirectory PHONE_DIRECTORY = new PhoneDirectory(new ArrayList<>(List.of(
+    public static final PhoneDirectoryService PHONE_DIRECTORY = new PhoneDirectoryService(new ArrayList<>(List.of(
             nikolayIvanov.getPerson(), petrPetrov.getPerson(), ilyaIlyiyov.getPerson(), aleksandrAleksandrov.getPerson(),
             ivanovIvan.getPerson(), artemArtemov.getPerson(), olegOlegov.getPerson(), alekseyAlekseev.getPerson(),
             maksimMaksimov.getPerson(), denisDenisov.getPerson())));

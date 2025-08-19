@@ -1,7 +1,7 @@
 package ru.PhoneDirectory.mapper;
 
 import javax.annotation.processing.Generated;
-import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
+import ru.PhoneDirectory.dto.FullNamePhoneNumbAddress;
 import ru.PhoneDirectory.Person;
 
 @Generated(

@@ -2,7 +2,7 @@ package ru.PhoneDirectory.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import ru.PhoneDirectory.DTO.FullNamePhoneNumbAddress;
+import ru.PhoneDirectory.dto.FullNamePhoneNumbAddress;
 import ru.PhoneDirectory.Person;
 
 @Mapper
