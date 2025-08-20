@@ -4,15 +4,13 @@ package ru.phoneDirectoryTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.PhoneDirectory.Person;
-import ru.PhoneDirectory.PhoneDirectory;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.PhoneDirectory.PhoneDirectory.*;
 import static ru.phoneDirectoryTest.PersonsForPhoneDirectory.*;
 
-public class PhoneDirectoryTest {
+public class PhoneDirectoryServiceTest {
 
     //1)найти всех людей проживающих в городе n, и вернуть их номер телефона и фио
     @Test

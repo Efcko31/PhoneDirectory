@@ -1,4 +1,4 @@
-package ru.PhoneDirectory.DTO;
+package ru.PhoneDirectory.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

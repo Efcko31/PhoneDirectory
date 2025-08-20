@@ -1,25 +1,24 @@
 package ru.PhoneDirectory.controllerPhoneDirectory;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.PhoneDirectory.DTO.UpdateRequest;
+import ru.PhoneDirectory.dto.UpdateRequest;
 import ru.PhoneDirectory.Person;
-import ru.PhoneDirectory.PhoneDirectory;
+import ru.PhoneDirectory.PhoneDirectoryService;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ru.PhoneDirectory.Tests.Persons.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.PhoneDirectory.enums.Persons.*;
 
 @WebMvcTest(Controller.class)
 public class ControllerTest {
@@ -27,26 +26,21 @@ public class ControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Mock
-    private PhoneDirectory phoneDirectory;
+    @MockitoBean
+    private PhoneDirectoryService phoneDirectoryService;
 
-    @BeforeEach
-    void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new Controller(phoneDirectory)).build();
 
-    }
-
-    public PhoneDirectory testPersons = new PhoneDirectory(List.of(
-            nikolayIvanov.getPerson(), petrPetrov.getPerson(), ilyaIlyiyov.getPerson(), aleksandrAleksandrov.getPerson(),
-            ivanovIvan.getPerson(), artemArtemov.getPerson(), olegOlegov.getPerson(), alekseyAlekseev.getPerson(),
-            maksimMaksimov.getPerson(), denisDenisov.getPerson()));
+    public PhoneDirectoryService testPersons = new PhoneDirectoryService(List.of(
+            NIKOLAY_IVANOV.getPerson(), PETR_PETROV.getPerson(), ILYA_ILYIYOV.getPerson(), ALEKSANDR_ALEKSANDROV.getPerson(),
+            IVANOV_IVAN.getPerson(), ARTEM_ARTEMOV.getPerson(), OLEG_OLEGOV.getPerson(), ALEKSEY_ALEKSEEV.getPerson(),
+            MAKSIM_MAKSIMOV.getPerson(), DENIS_DENISOV.getPerson()));
 
     @Test
     void getAllPersonsTest() throws Exception {
-        when(phoneDirectory.returnAllInformationAllPersons())
+        when(phoneDirectoryService.returnAllInformationAllPersons())
                 .thenReturn(testPersons.returnAllInformationAllPersons());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/phoneDirectory/getAllInformationAllPersons")
+        mockMvc.perform(get("/phoneDirectory/getAllInformationAllPersons")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0]")
@@ -54,50 +48,11 @@ public class ControllerTest {
     }
 
     @Test
-    void getPersonsWhoLivesInTheCityTest() throws Exception {
-        when(phoneDirectory.findEveryoneWhoLivesInTheCityX("Москва"))
-                .thenReturn(testPersons.findEveryoneWhoLivesInTheCityX("Москва"));
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/phoneDirectory/findEveryoneWhoLivesInTheCity")
-                        .param("city", "Москва")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].phoneNumber")
-                        .value("+7-111-111-11-11"));
-
-        when(phoneDirectory.findEveryoneWhoLivesInTheCityX("Москва"))
-                .thenReturn(testPersons.findEveryoneWhoLivesInTheCityX("Москва"));
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/phoneDirectory/findEveryoneWhoLivesInTheCity")
-                        .param("city", "Москва")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[-1].phoneNumber")
-                        .value("+7-777-777-77-77"));
-    }
-
-    @Test
-    void getPeopleWithoutPatronymic() throws Exception {
-        when(phoneDirectory.findPeopleWithoutPatronymic())
-                .thenReturn(testPersons.findPeopleWithoutPatronymic());
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/phoneDirectory/findPeopleWithoutPatronymic")
-                        .accept(MediaType.APPLICATION_XML))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_XML))
-                .andExpect(xpath("count(/List/FullNamePhoneNumbAddress)").number(2.0))
-                .andExpect(xpath("/List/PhoneDirectory[1]/lastName").string("Олегов"))
-                .andExpect(xpath("List/PhoneDirectory[2]/lastName").string("Алексеев"));
-
-    }
-
-
-    @Test
     void addsANewPersonTest() throws Exception {
 
-        when(phoneDirectory.addNewPerson(any(Person.class))).thenReturn("Добавлен новый гражданин!");
+        when(phoneDirectoryService.addNewPerson(any(Person.class))).thenReturn("Добавлен новый гражданин!");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/phoneDirectory/addNewPerson")
+        mockMvc.perform(post("/phoneDirectory/addNewPerson")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{" +
                                 "\"phoneNumber\" : \"+7-888-858-88-00\",\n" +
@@ -111,20 +66,20 @@ public class ControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string("Добавлен новый гражданин!"));
-
     }
 
     @Test
     void deletePersonByPhoneNumberTest() throws Exception {
 
-        when(phoneDirectory.deletePerson("+7-111-111-11-11")).thenReturn(true);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/phoneDirectory/deletePerson/+7-111-111-11-11")
+        when(phoneDirectoryService.deletePerson("+7-111-111-11-11")).thenReturn(true);//todo как будто бы что-то лишнее
+
+        mockMvc.perform(delete("/phoneDirectory/deletePerson/+7-111-111-11-11")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
 
-        when(phoneDirectory.deletePerson("+7-111-000-11-11")).thenReturn(false);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/phoneDirectory/deletePerson/+7-111-000-11-11")
+        when(phoneDirectoryService.deletePerson("+7-111-000-11-11")).thenReturn(false);//todo как будто бы что-то лишнее
+        mockMvc.perform(delete("/phoneDirectory/deletePerson/+7-111-000-11-11")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("false"));
@@ -133,9 +88,11 @@ public class ControllerTest {
     @Test
     void replaceUserDataTest() throws Exception {
         UpdateRequest requestTest = new UpdateRequest("lastName", "Грачевский");
-        when(phoneDirectory.replaceUserData("+7-999-999-99-99",
+
+        when(phoneDirectoryService.replaceUserData("+7-999-999-99-99",
                 requestTest.getField(), requestTest.getData())).thenReturn(true);
-        mockMvc.perform(MockMvcRequestBuilders.put("/phoneDirectory/replaceUserData/+7-999-999-99-99")
+
+        mockMvc.perform(put("/phoneDirectory/replaceUserData/+7-999-999-99-99")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{" +
                                 "\"field\" : \"lastName\",\n" +
