@@ -37,7 +37,7 @@ public class PhoneDirectoryServiceTest {
     @Test
     void findPeopleWithCertainProfessionTest() {
         assertEquals(List.of(
-                        ivanovIvan.getPerson(), petrPetrov.getPerson(), ilyaIlyiyov.getPerson()),
+                        IVANOV_IVAN.getPerson(), PETR_PETROV.getPerson(), ILYA_ILYIYOV.getPerson()),
                 PHONE_DIRECTORY.findPeopleWithProfessionXAndSortByCity("Разработчик"));
         //assertEquals(List.of(
           //              denisDenisov.getPerson(), alekseyAlekseev.getPerson()),
@@ -47,9 +47,9 @@ public class PhoneDirectoryServiceTest {
     //4)найти n людей с определенной профессией
     @Test
     void findNPeopleWithTheSpecifiedProfessionTest() {
-        Assertions.assertEquals(List.of(alekseyAlekseev.getPerson()), PHONE_DIRECTORY.findNPeopleWithTheSpecifiedProfession(
+        Assertions.assertEquals(List.of(ALEKSEY_ALEKSEEV.getPerson()), PHONE_DIRECTORY.findNPeopleWithTheSpecifiedProfession(
                 "Таксист", 1));
-        Assertions.assertEquals(List.of(nikolayIvanov.getPerson(), aleksandrAleksandrov.getPerson()), PHONE_DIRECTORY.findNPeopleWithTheSpecifiedProfession(
+        Assertions.assertEquals(List.of(NIKOLAY_IVANOV.getPerson(), ALEKSANDR_ALEKSANDROV.getPerson()), PHONE_DIRECTORY.findNPeopleWithTheSpecifiedProfession(
                 "Слесарь", 2));
         Assertions.assertEquals(List.of(), PHONE_DIRECTORY.findNPeopleWithTheSpecifiedProfession(
                 "Слесарь", 0));
@@ -58,11 +58,11 @@ public class PhoneDirectoryServiceTest {
     //5)осуществить прозвон всех людей с профессией x, с уточненим актуальности информации
     @Test
     void callAllPeopleWithProfessionXAndClarifyInformationTest() {
-        Assertions.assertEquals(List.of(nikolayIvanov.getPerson(), aleksandrAleksandrov.getPerson(), artemArtemov.getPerson(), olegOlegov.getPerson()),
+        Assertions.assertEquals(List.of(NIKOLAY_IVANOV.getPerson(), ALEKSANDR_ALEKSANDROV.getPerson(), ARTEM_ARTEMOV.getPerson(), OLEG_OLEGOV.getPerson()),
                 PHONE_DIRECTORY.callAllPeopleWithProfessionX("Слесарь"));
-        Assertions.assertEquals(List.of(alekseyAlekseev.getPerson(), denisDenisov.getPerson()),
+        Assertions.assertEquals(List.of(ALEKSEY_ALEKSEEV.getPerson(), DENIS_DENISOV.getPerson()),
                 PHONE_DIRECTORY.callAllPeopleWithProfessionX("Таксист"));
-        Assertions.assertEquals(List.of(petrPetrov.getPerson(), ilyaIlyiyov.getPerson(), ivanovIvan.getPerson()),
+        Assertions.assertEquals(List.of(PETR_PETROV.getPerson(), ILYA_ILYIYOV.getPerson(), IVANOV_IVAN.getPerson()),
                 PHONE_DIRECTORY.callAllPeopleWithProfessionX("Разработчик"));
     }
 

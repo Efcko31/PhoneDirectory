@@ -15,10 +15,22 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.PhoneDirectory.enums.Persons.*;
+import static ru.PhoneDirectory.enums.Persons.ARTEM_ARTEMOV;
+import static ru.PhoneDirectory.enums.Persons.ALEKSANDR_ALEKSANDROV;
+import static ru.PhoneDirectory.enums.Persons.DENIS_DENISOV;
+import static ru.PhoneDirectory.enums.Persons.ILYA_ILYIYOV;
+import static ru.PhoneDirectory.enums.Persons.MAKSIM_MAKSIMOV;
+import static ru.PhoneDirectory.enums.Persons.ALEKSEY_ALEKSEEV;
+import static ru.PhoneDirectory.enums.Persons.NIKOLAY_IVANOV;
+import static ru.PhoneDirectory.enums.Persons.IVANOV_IVAN;
+import static ru.PhoneDirectory.enums.Persons.PETR_PETROV;
+import static ru.PhoneDirectory.enums.Persons.OLEG_OLEGOV;
 
 @WebMvcTest(Controller.class)
 public class ControllerTest {
@@ -28,7 +40,6 @@ public class ControllerTest {
 
     @MockitoBean
     private PhoneDirectoryService phoneDirectoryService;
-
 
     public PhoneDirectoryService testPersons = new PhoneDirectoryService(List.of(
             NIKOLAY_IVANOV.getPerson(), PETR_PETROV.getPerson(), ILYA_ILYIYOV.getPerson(), ALEKSANDR_ALEKSANDROV.getPerson(),
@@ -44,13 +55,23 @@ public class ControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0]")
-                        .value(testPersons.getPersonList().getFirst().toString()));
+                        .value(testPersons.getPersonsList().getFirst().toString()));
     }
 
     @Test
     void addsANewPersonTest() throws Exception {
+        Person newPersonTest = new Person(
+                "+7-888-858-88-00",
+                "Алексей",
+                "Алексеев",
+                "",
+                "Санкт-Петербург",
+                "улица Гринькова, д.33, кв.76",
+                "Таксист"
+        );
 
-        when(phoneDirectoryService.addNewPerson(any(Person.class))).thenReturn("Добавлен новый гражданин!");
+        when(phoneDirectoryService.addNewPerson(any(Person.class)))
+                .thenReturn(newPersonTest);
 
         mockMvc.perform(post("/phoneDirectory/addNewPerson")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -70,15 +91,16 @@ public class ControllerTest {
 
     @Test
     void deletePersonByPhoneNumberTest() throws Exception {
-
-        when(phoneDirectoryService.deletePerson("+7-111-111-11-11")).thenReturn(true);//todo как будто бы что-то лишнее
+        when(phoneDirectoryService.deletePerson("+7-111-111-11-11"))
+                .thenReturn(true);
 
         mockMvc.perform(delete("/phoneDirectory/deletePerson/+7-111-111-11-11")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
 
-        when(phoneDirectoryService.deletePerson("+7-111-000-11-11")).thenReturn(false);//todo как будто бы что-то лишнее
+        when(phoneDirectoryService.deletePerson("+7-111-000-11-11")).
+                thenReturn(false);
         mockMvc.perform(delete("/phoneDirectory/deletePerson/+7-111-000-11-11")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -89,7 +111,15 @@ public class ControllerTest {
     void replaceUserDataTest() throws Exception {
         UpdateRequest requestTest = new UpdateRequest("lastName", "Грачевский");
 
-        when(phoneDirectoryService.replaceUserData("+7-999-999-99-99",
+        when(phoneDirectoryService.replaceUserData(new Person(
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                ),
                 requestTest.getField(), requestTest.getData())).thenReturn(true);
 
         mockMvc.perform(put("/phoneDirectory/replaceUserData/+7-999-999-99-99")

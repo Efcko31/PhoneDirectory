@@ -3,6 +3,9 @@ package ru.PhoneDirectory.enums;
 import lombok.Getter;
 import ru.PhoneDirectory.Person;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 public enum Persons {
 
@@ -92,9 +95,11 @@ public enum Persons {
         this.person = person;
     }
 
-    //public
-
     //todo метод который вернет список персон
+    public List<Person> returnsAListOfPersons() {
+
+        return new ArrayList<>();
+    }
 
 
 }

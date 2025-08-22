@@ -1,12 +1,12 @@
 package ru.PhoneDirectory.mapper;
 
 import javax.annotation.processing.Generated;
-import ru.PhoneDirectory.dto.FullNamePhoneNumb;
 import ru.PhoneDirectory.Person;
+import ru.PhoneDirectory.dto.FullNamePhoneNumb;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-08-07T12:04:15+0300",
+    date = "2025-08-21T14:13:58+0300",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Microsoft)"
 )
 public class FullNamePhoneNumbMapperImpl implements FullNamePhoneNumbMapper {
