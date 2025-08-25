@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.PhoneDirectory.phoneDirectoryRepository.PersonsForPhoneDirectory.aleksandrAleksandrov;
+import static ru.PhoneDirectory.enums.Persons.ALEKSANDR_ALEKSANDROV;
 import static ru.PhoneDirectory.phoneDirectoryRepository.PhoneDirectoryRepository.findPeopleWithoutPatronymic;
 
 public class PhoneDirectoryServiceSQLTest {
@@ -48,7 +48,7 @@ public class PhoneDirectoryServiceSQLTest {
 
     @Test
     void searchForPersonPhoneNumberSQLTest() {
-        Assertions.assertEquals(aleksandrAleksandrov.getPerson(), lookingForPersonByPhoneNumber("+7-444-444-44-44"));
+        Assertions.assertEquals(ALEKSANDR_ALEKSANDROV.getPerson(), lookingForPersonByPhoneNumber("+7-444-444-44-44"));
         Assertions.assertEquals(null, lookingForPersonByPhoneNumber("+7-444-474-44-54"));
     }
 

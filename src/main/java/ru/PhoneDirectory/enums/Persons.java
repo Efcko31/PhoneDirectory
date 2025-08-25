@@ -3,6 +3,8 @@ package ru.PhoneDirectory.enums;
 import lombok.Getter;
 import ru.PhoneDirectory.Person;
 
+import java.util.List;
+
 @Getter
 public enum Persons {
 
@@ -92,9 +94,13 @@ public enum Persons {
         this.person = person;
     }
 
-    //public
-
     //todo метод который вернет список персон
+    public static List<Person> returnsAListOfPersons() {
+        return List.of(NIKOLAY_IVANOV.getPerson(), PETR_PETROV.getPerson(), ILYA_ILYIYOV.getPerson(),
+                ALEKSANDR_ALEKSANDROV.getPerson(),
+                IVANOV_IVAN.getPerson(), ARTEM_ARTEMOV.getPerson(), OLEG_OLEGOV.getPerson(), ALEKSEY_ALEKSEEV.getPerson(),
+                MAKSIM_MAKSIMOV.getPerson(), DENIS_DENISOV.getPerson());
+    }
 
 
 }

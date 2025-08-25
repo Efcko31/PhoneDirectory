@@ -1,7 +1,8 @@
-package ru.PhoneDirectory.phoneDirectoryRepository;
+package ru.phoneDirectoryTest;
 
 import lombok.Getter;
 import ru.PhoneDirectory.Person;
+import ru.PhoneDirectory.PhoneDirectoryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 @Getter
 public enum PersonsForPhoneDirectory {
 
-    nikolayIvanov(new Person(
+    NIKOLAY_IVANOV(new Person(
             "+7-111-111-11-11",
             "Николай",
             "Иванов",
@@ -17,7 +18,7 @@ public enum PersonsForPhoneDirectory {
             "Москва",
             "улица Ромашковая, д.12",
             "Слесарь")),
-    petrPetrov(new Person(
+    PETR_PETROV(new Person(
             "+7-222-222-22-22",
             "Петр",
             "Петров",
@@ -25,7 +26,7 @@ public enum PersonsForPhoneDirectory {
             "Санкт-Петербург",
             "улица Громова, д.6, кв.12",
             "Разработчик")),
-    ilyaIlyiyov(new Person(
+    ILYA_ILYIYOV(new Person(
             "+7-333-333-33-33",
             "Илья",
             "Ильёв",
@@ -33,7 +34,7 @@ public enum PersonsForPhoneDirectory {
             "Санкт-Петербург",
             "улица Громова, д.12, кв.55",
             "Разработчик")),
-    aleksandrAleksandrov(new Person(
+    ALEKSANDR_ALEKSANDROV(new Person(
             "+7-444-444-44-44",
             "Александр",
             "Алекснадров",
@@ -41,7 +42,7 @@ public enum PersonsForPhoneDirectory {
             "Москва",
             "улица Ромашковая, д.12",
             "Слесарь")),
-    ivanovIvan(new Person(
+    IVANOV_IVAN(new Person(
             "+7-555-555-55-55",
             "Иван",
             "Иванов",
@@ -49,7 +50,7 @@ public enum PersonsForPhoneDirectory {
             "Екатеринбург",
             "улица Красноказарменная, д.33, кв.44",
             "Разработчик")),
-    artemArtemov(new Person(
+    ARTEM_ARTEMOV(new Person(
             "+7-666-666-66-66",
             "Артем",
             "Артемов",
@@ -57,7 +58,7 @@ public enum PersonsForPhoneDirectory {
             "Екатеринбург",
             "улица Красноказарменная, д.12, кв.12",
             "Слесарь")),
-    olegOlegov(new Person(
+    OLEG_OLEGOV(new Person(
             "+7-777-777-77-77",
             "Олег",
             "Олегов",
@@ -65,7 +66,7 @@ public enum PersonsForPhoneDirectory {
             "Москва",
             "улица Новохохловская, д.12",
             "Слесарь")),
-    alekseyAlekseev(new Person(
+    ALEKSEY_ALEKSEEV(new Person(
             "+7-888-888-88-88",
             "Алексей",
             "Алексеев",
@@ -73,7 +74,7 @@ public enum PersonsForPhoneDirectory {
             "Санкт-Петербург",
             "улица Гринькова, д.33, кв.76",
             "Таксист")),
-    maksimMaksimov(new Person(
+    MAKSIM_MAKSIMOV(new Person(
             "+7-999-999-99-99",
             "Максим",
             "Максимов",
@@ -81,7 +82,7 @@ public enum PersonsForPhoneDirectory {
             "Белгород",
             "улица Королева, д.55, кв.22",
             "Стоматолог")),
-    denisDenisov(new Person(
+    DENIS_DENISOV(new Person(
             "+7-000-000-00-00", //номер телефона пишется с кодом страны +7 expression
             "Денис",
             "Денисов",
@@ -95,8 +96,10 @@ public enum PersonsForPhoneDirectory {
         this.person = person;
     }
 
-    public static final List<Person> phoneDirectory = new ArrayList<>(List.of(
-            nikolayIvanov.getPerson(), petrPetrov.getPerson(), ilyaIlyiyov.getPerson(), aleksandrAleksandrov.getPerson(),
-            ivanovIvan.getPerson(), artemArtemov.getPerson(), olegOlegov.getPerson(), alekseyAlekseev.getPerson(),
-            maksimMaksimov.getPerson(), denisDenisov.getPerson()));
+    public List<Person> returnsAListOfPersons() {
+        return List.of(NIKOLAY_IVANOV.getPerson(), PETR_PETROV.getPerson(), ILYA_ILYIYOV.getPerson(),
+                ALEKSANDR_ALEKSANDROV.getPerson(),
+                IVANOV_IVAN.getPerson(), ARTEM_ARTEMOV.getPerson(), OLEG_OLEGOV.getPerson(), ALEKSEY_ALEKSEEV.getPerson(),
+                MAKSIM_MAKSIMOV.getPerson(), DENIS_DENISOV.getPerson());
+    }
 }

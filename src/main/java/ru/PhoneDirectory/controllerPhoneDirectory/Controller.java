@@ -1,18 +1,23 @@
 package ru.PhoneDirectory.controllerPhoneDirectory;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import ru.PhoneDirectory.Person;
+import ru.PhoneDirectory.PhoneDirectoryService;
 import ru.PhoneDirectory.dto.FullNamePhoneNumb;
 import ru.PhoneDirectory.dto.FullNamePhoneNumbAddress;
 import ru.PhoneDirectory.dto.UpdateRequest;
-import ru.PhoneDirectory.Person;
-import ru.PhoneDirectory.PhoneDirectoryService;
 
 import java.util.List;
 
@@ -31,7 +36,7 @@ public class Controller {
     @GetMapping("/getAllPersons")
     public List<Person> returnAllPersons() {
         log.info("запрос на всех пользователей");
-        return PhoneDirectoryService.PERSON_LIST;//todo херня получилась
+        return phoneDirectoryService.getPersonsList();//todo херня получилась
     }
 
     @GetMapping("/getAllInformationAllPersons")
@@ -60,7 +65,7 @@ public class Controller {
 
     //Запрос в формате JSON и ответ в формате JSON
     @PostMapping(value = "/addNewPerson", produces = MediaType.APPLICATION_JSON_VALUE) //возвращает Json
-    public String addNewPerson(@RequestBody Person person) {
+    public Person addNewPerson(@RequestBody Person person) {
         log.info("запрос на добавление нового товарища!");
         return phoneDirectoryService.addNewPerson(person);
         //  "phoneNumber": "+7-888-858-88-00",
@@ -74,7 +79,7 @@ public class Controller {
 
 
     @PostMapping(value = "/addNewPersonFormatXML", consumes = "application/xml", produces = "application/xml")
-    public String addANewPersonFormatXML(@RequestBody Person person) {
+    public Person addANewPersonFormatXML(@RequestBody Person person) {
         return phoneDirectoryService.addNewPerson(person);
     }
 
@@ -89,14 +94,15 @@ public class Controller {
     //</person>
 
     @PutMapping(value = "/replaceUserData/{phoneNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public boolean replaceUserData(@PathVariable("phoneNumber") String phoneNumber,
-                                   @RequestBody UpdateRequest request) {
+    public Person replaceUserData(@PathVariable("phoneNumber") Person newDataPerson,
+                                   @RequestBody String numberPersonForReplace) {
 
-        log.info("запрос на изменение данных о пользователе с номером: {}", phoneNumber);
-        log.info("поле: {}; данные: {}", request.getField(), request.getData());
-        return phoneDirectoryService.replaceUserData(phoneNumber, request.getField(), request.getData());
+        log.info("запрос на изменение данных о пользователе с номером: {}", numberPersonForReplace);
+        //log.info("поле: {}; данные: {}", request.getField(), request.getData());
+        return phoneDirectoryService.replaceUserData(newDataPerson, numberPersonForReplace);
 
     }
+
     // {
     // "phoneNumber" : "+7-111-111-11-11",
     // "field" : "lastName",
