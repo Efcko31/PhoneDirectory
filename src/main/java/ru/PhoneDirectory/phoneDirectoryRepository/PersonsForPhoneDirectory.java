@@ -1,10 +1,8 @@
-package ru.phoneDirectoryTest;
+package ru.PhoneDirectory.phoneDirectoryRepository;
 
 import lombok.Getter;
 import ru.PhoneDirectory.Person;
-import ru.PhoneDirectory.PhoneDirectoryService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
