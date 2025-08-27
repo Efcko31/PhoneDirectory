@@ -4,20 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.PhoneDirectory.Person;
 import ru.PhoneDirectory.PhoneDirectoryService;
 import ru.PhoneDirectory.dto.FullNamePhoneNumb;
 import ru.PhoneDirectory.dto.FullNamePhoneNumbAddress;
-import ru.PhoneDirectory.dto.UpdateRequest;
 
 import java.util.List;
 
@@ -36,7 +27,7 @@ public class Controller {
     @GetMapping("/getAllPersons")
     public List<Person> returnAllPersons() {
         log.info("запрос на всех пользователей");
-        return phoneDirectoryService.getPersonsList();//todo херня получилась
+        return phoneDirectoryService.getPersonsList();
     }
 
     @GetMapping("/getAllInformationAllPersons")
@@ -59,23 +50,32 @@ public class Controller {
 
     @GetMapping("/findPeopleWithProfessionX")
     public List<Person> findPeopleWithProfessionXAndSortByCity(@RequestParam("profession") String profession) {
-        log.info("запрос на людей с профессией: {}", profession);
+        log.info("запрос на людей с профессией: {} + сортировка по городу", profession);
         return phoneDirectoryService.findPeopleWithProfessionXAndSortByCity(profession);
+    }
+
+    @GetMapping("/findNPeopleWithTheSpecifiedProfession")
+    public List<Person> findNPeopleWithTheSpecifiedProfession(
+            @RequestParam("profession") String profession, int number) {
+        log.info("Запрос на людей профессии {} в количестве {}", profession, number);
+        return phoneDirectoryService.findNPeopleWithTheSpecifiedProfession(profession, number);
     }
 
     //Запрос в формате JSON и ответ в формате JSON
     @PostMapping(value = "/addNewPerson", produces = MediaType.APPLICATION_JSON_VALUE) //возвращает Json
     public Person addNewPerson(@RequestBody Person person) {
-        log.info("запрос на добавление нового товарища!");
+        log.info("запрос на добавление нового гражданина!");
         return phoneDirectoryService.addNewPerson(person);
-        //  "phoneNumber": "+7-888-858-88-00",
-        //    "firstName" : "Алексей",
-        //    "LastName" : "Алексеев",
-        //    "patronymic" : "",
-        //    "cityOfResidence" :"Санкт-Петербург",
-        //    "address" : "улица Гринькова, д.33, кв.76",
-        //    "typeofActivity" : "Таксист"
     }
+
+    /*  "phoneNumber": "+7-888-858-88-00",
+        "firstName" : "Алексей",
+        "LastName" : "Алексеев",
+        "patronymic" : "",
+        "cityOfResidence" :"Санкт-Петербург",
+        "address" : "улица Гринькова, д.33, кв.76",
+        "typeofActivity" : "Таксист"
+    */
 
 
     @PostMapping(value = "/addNewPersonFormatXML", consumes = "application/xml", produces = "application/xml")
@@ -83,32 +83,33 @@ public class Controller {
         return phoneDirectoryService.addNewPerson(person);
     }
 
-    //<person>
-    //    <phoneNumber>+7-888-858-88-00"</phoneNumber>
-    //    <firstName>Алексей</firstName>
-    //    <LastName>Алексеев</LastName>
-    //    <patronymic></patronymic>
-    //    <cityOfResidence>Санкт-Петербург</cityOfResidence>
-    //    <address>улица Гринькова, д.33, кв.76</address>
-    //    <typeofActivity>Таксист</typeofActivity>
-    //</person>
+    /*
+    <person>
+        <phoneNumber>+7-888-858-88-00"</phoneNumber>
+        <firstName>Алексей</firstName>
+        <LastName>Алексеев</LastName>
+        <patronymic></patronymic>
+        <cityOfResidence>Санкт-Петербург</cityOfResidence>
+        <address>улица Гринькова, д.33, кв.76</address>
+        <typeofActivity>Таксист</typeofActivity>
+    </person>
+    */
 
     @PutMapping(value = "/replaceUserData/{phoneNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Person replaceUserData(@PathVariable("phoneNumber") Person newDataPerson,
-                                   @RequestBody String numberPersonForReplace) {
-
+                                  @RequestBody String numberPersonForReplace) {
         log.info("запрос на изменение данных о пользователе с номером: {}", numberPersonForReplace);
         //log.info("поле: {}; данные: {}", request.getField(), request.getData());
         return phoneDirectoryService.replaceUserData(newDataPerson, numberPersonForReplace);
-
     }
 
-    // {
-    // "phoneNumber" : "+7-111-111-11-11",
-    // "field" : "lastName",
-    // "data" : "Горький"
-    // }
-
+    /*
+    {
+    "phoneNumber" : "+7-111-111-11-11",
+    "field" : "lastName",
+    "data" : "Горький"
+    }
+    */
     @DeleteMapping("/deletePerson/{phoneNumber}")
     public boolean deletePerson(@PathVariable("phoneNumber") String phoneNumberDeletedPerson) {
         log.info("Запрос на удаление пользователя с номером телефона {}", phoneNumberDeletedPerson);

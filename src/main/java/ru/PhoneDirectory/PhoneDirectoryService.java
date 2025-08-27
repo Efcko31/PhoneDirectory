@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @Service
 public class PhoneDirectoryService {
 
-    private Persons enumPersons;
     private List<Person> personsList;
 
     public PhoneDirectoryService() {
@@ -30,7 +29,7 @@ public class PhoneDirectoryService {
     public static final String FULL_NAME_TYPE_ACTIVITY = "%s %s %s, %s\n";
     public static final String MASSAGE_BEGINNING_CALL = "Начат вызов. %s т.%s%n";
 
-    //1)найти всех людей проживающих в городе n, и вернуть их номер телефона и фио
+    //1)найти всех людей проживающих в городе n, и вернуть их номер телефона и фио test+
     public List<FullNamePhoneNumb> findEveryoneWhoLivesInTheCityX(
             String cityN) {
         return personsList.stream()
@@ -39,7 +38,7 @@ public class PhoneDirectoryService {
                 .collect(Collectors.toList());
     }
 
-    //2)найти людей без отчества, и вернуть место их проживания, фио, номер телефона
+    //2)найти людей без отчества, и вернуть место их проживания, фио, номер телефона test+
     public List<FullNamePhoneNumbAddress> findPeopleWithoutPatronymic() {
         return personsList.stream()
                 .filter(p -> p.getPatronymic() == null || p.getPatronymic().isEmpty())
@@ -47,7 +46,7 @@ public class PhoneDirectoryService {
                 .collect(Collectors.toList());
     }
 
-    //3)найти людей с профессией x, и вернуть информацию о них отсротирваную по городу
+    //3)найти людей с профессией x, и вернуть информацию о них отсротирваную по городу test+
     public List<Person> findPeopleWithProfessionXAndSortByCity(
             String profession) {
         return personsList.stream()
@@ -71,6 +70,7 @@ public class PhoneDirectoryService {
                 p.getFirstName(),
                 p.getPatronymic(),
                 p.getTypeofActivity()));
+
         return listPeopleWithProfessionN;
     }
 
