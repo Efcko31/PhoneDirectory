@@ -94,7 +94,6 @@ public enum Persons {
         this.person = person;
     }
 
-    //todo метод который вернет список персон
     public static List<Person> returnsAListOfPersons() {
         return List.of(NIKOLAY_IVANOV.getPerson(), PETR_PETROV.getPerson(), ILYA_ILYIYOV.getPerson(),
                 ALEKSANDR_ALEKSANDROV.getPerson(),

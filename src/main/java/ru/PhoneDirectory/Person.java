@@ -91,9 +91,9 @@ public class Person extends Object {
     @Override
     public String toString() {
         return "ФИО: " + lastName + " " + firstName + " " + patronymic
-                + ";\n Город: " + cityOfResidence
-                + ";\n Адрес: " + address
-                + ";\n Профессия: " + typeofActivity
-                + ";\n Телефон: " + phoneNumber + ".";
+                + "; Город: " + cityOfResidence
+                + "; Адрес: " + address
+                + "; Профессия: " + typeofActivity
+                + "; Телефон: " + phoneNumber + ".";
     }
 }

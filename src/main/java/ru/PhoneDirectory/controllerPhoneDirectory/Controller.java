@@ -13,7 +13,7 @@ import ru.PhoneDirectory.dto.FullNamePhoneNumbAddress;
 import java.util.List;
 
 @RestController
-@RequestMapping("/phoneDirectory")
+@RequestMapping("/phoneDirectoryService")
 @Slf4j //логирование
 public class Controller {
 
@@ -36,10 +36,10 @@ public class Controller {
         return phoneDirectoryService.returnAllInformationAllPersons();
     }
 
-    @GetMapping("/findEveryoneWhoLivesInTheCity")
-    public List<FullNamePhoneNumb> returnPersonsWhoLivesInTheCity(@RequestParam("city") String city) {
-        log.info("запрос на жителей города: {}", city);
-        return phoneDirectoryService.findEveryoneWhoLivesInTheCityX(city);
+    @GetMapping("/findEveryoneWhoLivesInTheCityN")
+    public List<FullNamePhoneNumb> returnPersonsWhoLivesInTheCityN(@RequestParam("cityN") String cityN) {
+        log.info("запрос на жителей города: {}", cityN);
+        return phoneDirectoryService.findEveryoneWhoLivesInTheCityN(cityN);
     }
 
     @GetMapping(value = "/findPeopleWithoutPatronymic", produces = "application/xml")
@@ -56,9 +56,15 @@ public class Controller {
 
     @GetMapping("/findNPeopleWithTheSpecifiedProfession")
     public List<Person> findNPeopleWithTheSpecifiedProfession(
-            @RequestParam("profession") String profession, int number) {
+            @RequestParam("profession") String profession, @RequestParam("number") int number) {
         log.info("Запрос на людей профессии {} в количестве {}", profession, number);
         return phoneDirectoryService.findNPeopleWithTheSpecifiedProfession(profession, number);
+    }
+
+    @GetMapping("/callAllPeopleWithProfessionX")
+    public List<Person> callAllPeopleWithProfessionX(@RequestParam("profession") String profession) {
+        log.info("Запрос на прозвон людей с профессией {}", profession);
+        return phoneDirectoryService.callAllPeopleWithProfessionX(profession);
     }
 
     //Запрос в формате JSON и ответ в формате JSON
@@ -96,10 +102,9 @@ public class Controller {
     */
 
     @PutMapping(value = "/replaceUserData/{phoneNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person replaceUserData(@PathVariable("phoneNumber") Person newDataPerson,
-                                  @RequestBody String numberPersonForReplace) {
+    public Person replaceUserData(@RequestBody Person newDataPerson,
+                                  @PathVariable("phoneNumber") String numberPersonForReplace) {
         log.info("запрос на изменение данных о пользователе с номером: {}", numberPersonForReplace);
-        //log.info("поле: {}; данные: {}", request.getField(), request.getData());
         return phoneDirectoryService.replaceUserData(newDataPerson, numberPersonForReplace);
     }
 
@@ -110,6 +115,7 @@ public class Controller {
     "data" : "Горький"
     }
     */
+
     @DeleteMapping("/deletePerson/{phoneNumber}")
     public boolean deletePerson(@PathVariable("phoneNumber") String phoneNumberDeletedPerson) {
         log.info("Запрос на удаление пользователя с номером телефона {}", phoneNumberDeletedPerson);

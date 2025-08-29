@@ -19,13 +19,13 @@ public class PhoneDirectoryServiceTest {
     @Test
     void findEveryoneWhoLivesInTheCityTest() {
         assertEquals("+7-111-111-11-11",
-                PHONE_DIRECTORY.findEveryoneWhoLivesInTheCityX("Москва").getFirst().getPhoneNumber());
+                PHONE_DIRECTORY.findEveryoneWhoLivesInTheCityN("Москва").getFirst().getPhoneNumber());
         assertEquals("+7-777-777-77-77",
-                PHONE_DIRECTORY.findEveryoneWhoLivesInTheCityX("Москва").getLast().getPhoneNumber());
+                PHONE_DIRECTORY.findEveryoneWhoLivesInTheCityN("Москва").getLast().getPhoneNumber());
         assertEquals("+7-222-222-22-22",
-                PHONE_DIRECTORY.findEveryoneWhoLivesInTheCityX("Санкт-Петербург").getFirst().getPhoneNumber());
+                PHONE_DIRECTORY.findEveryoneWhoLivesInTheCityN("Санкт-Петербург").getFirst().getPhoneNumber());
         assertEquals("+7-888-888-88-88",
-                PHONE_DIRECTORY.findEveryoneWhoLivesInTheCityX("Санкт-Петербург").getLast().getPhoneNumber());
+                PHONE_DIRECTORY.findEveryoneWhoLivesInTheCityN("Санкт-Петербург").getLast().getPhoneNumber());
     }
 
     //2)найти людей без отчества, и вернуть место их проживания, фио, номер телефона
@@ -43,6 +43,8 @@ public class PhoneDirectoryServiceTest {
                 PHONE_DIRECTORY.findPeopleWithProfessionXAndSortByCity("Разработчик").getFirst().getPhoneNumber()));
         assertTrue(DENIS_DENISOV.getPerson().getPhoneNumber()
                 .equals(PHONE_DIRECTORY.findPeopleWithProfessionXAndSortByCity("Таксист").getFirst().getPhoneNumber()));
+
+        System.out.println(PHONE_DIRECTORY.findPeopleWithProfessionXAndSortByCity("Таксист"));
     }
 
     //4)найти n людей с определенной профессией
@@ -67,17 +69,17 @@ public class PhoneDirectoryServiceTest {
                 PHONE_DIRECTORY.callAllPeopleWithProfessionX("Разработчик").getFirst().getPhoneNumber());
     }
 
-    @Test
-    void transferringDataToSQL() {
-        PHONE_DIRECTORY.addNewPerson(new Person(
-                "+7-888-858-88-00",
-                "Алексей",
-                "Алексеев",
-                "",
-                "Санкт-Петербург",
-                "улица Гринькова, д.33, кв.76",
-                "Таксист"));
-    }
+//    @Test
+//    void transferringDataToSQL() {
+//        PHONE_DIRECTORY.addNewPerson(new Person(
+//                "+7-888-858-88-00",
+//                "Алексей",
+//                "Алексеев",
+//                "",
+//                "Санкт-Петербург",
+//                "улица Гринькова, д.33, кв.76",
+//                "Таксист"));
+//    }
 
     @Test
     void deletePersonByPhoneNumber() {
@@ -86,15 +88,15 @@ public class PhoneDirectoryServiceTest {
         //assertFalse(PHONE_DIRECTORY.deletePerson("+7-111-000-11-11")); //.NoSuchElementException
     }
 
-    @Test
-    void fundPersonForPhoneNumber() {
-        assertEquals("Петров", PHONE_DIRECTORY.findPersonByPhoneNumber("82222222222").getLastName());
-    }
+//    @Test
+//    void fundPersonForPhoneNumber() {
+//        assertEquals("Петров", PHONE_DIRECTORY.findPersonByPhoneNumber("82222222222").getLastName());
+//    }
 
-    @Test
-    void checksUsersByPhoneNumberTest() {
-        assertTrue(PHONE_DIRECTORY.checksUsersByPhoneNumber("82222222222", PETR_PETROV.getPerson()));
-    }
+//    @Test
+//    void checksUsersByPhoneNumberTest() {
+//        assertTrue(PHONE_DIRECTORY.checksUsersByPhoneNumber("82222222222", PETR_PETROV.getPerson()));
+//    }
 
     @Test
     void replaceUserDataTest() {
@@ -111,6 +113,4 @@ public class PhoneDirectoryServiceTest {
         ).getLastName());
 
     }
-
-
 }

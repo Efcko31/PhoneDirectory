@@ -29,16 +29,16 @@ public class PhoneDirectoryService {
     public static final String FULL_NAME_TYPE_ACTIVITY = "%s %s %s, %s\n";
     public static final String MASSAGE_BEGINNING_CALL = "Начат вызов. %s т.%s%n";
 
-    //1)найти всех людей проживающих в городе n, и вернуть их номер телефона и фио test+
-    public List<FullNamePhoneNumb> findEveryoneWhoLivesInTheCityX(
+    //1)найти всех людей проживающих в городе n, и вернуть их номер телефона и фио ControllerTest+
+    public List<FullNamePhoneNumb> findEveryoneWhoLivesInTheCityN(
             String cityN) {
         return personsList.stream()
-                .filter(p -> cityN.equals(p.getCityOfResidence()))
+                .filter(p -> cityN.equalsIgnoreCase(p.getCityOfResidence()))
                 .map(FullNamePhoneNumbMapper.INSTANCE::toFullNamePhoneNumb)
                 .collect(Collectors.toList());
     }
 
-    //2)найти людей без отчества, и вернуть место их проживания, фио, номер телефона test+
+    //2)найти людей без отчества, и вернуть место их проживания, фио, номер телефона ControllerTest+
     public List<FullNamePhoneNumbAddress> findPeopleWithoutPatronymic() {
         return personsList.stream()
                 .filter(p -> p.getPatronymic() == null || p.getPatronymic().isEmpty())
@@ -46,7 +46,7 @@ public class PhoneDirectoryService {
                 .collect(Collectors.toList());
     }
 
-    //3)найти людей с профессией x, и вернуть информацию о них отсротирваную по городу test+
+    //3)найти людей с профессией x, и вернуть информацию о них отсротирваную по городу ControllerTest+
     public List<Person> findPeopleWithProfessionXAndSortByCity(
             String profession) {
         return personsList.stream()
@@ -56,12 +56,12 @@ public class PhoneDirectoryService {
                 .collect(Collectors.toList());
     }
 
-    //4)найти n людей с определенной профессией
+    //4)найти n людей с определенной профессией ControllerTest+
     public List<Person> findNPeopleWithTheSpecifiedProfession(String profession, int n) {
         if (profession == null || n <= 0) return List.of();
 
         List<Person> listPeopleWithProfessionN = personsList.stream()
-                .filter(s -> profession.equals(s.getTypeofActivity()))
+                .filter(s -> profession.equalsIgnoreCase(s.getTypeofActivity()))
                 .limit(n)
                 .toList();
 
@@ -74,12 +74,12 @@ public class PhoneDirectoryService {
         return listPeopleWithProfessionN;
     }
 
-    //5)осуществить прозвон всех людей с профессией x, с уточнением актуальности информации
+    //5)осуществить прозвон всех людей с профессией x, с уточнением актуальности информации ControllerTest+
     public List<Person> callAllPeopleWithProfessionX(String profession) {
         if (profession == null) return List.of();
 
         List<Person> subscribersToWhomCallWasMade = personsList.stream()
-                .filter(p -> profession.equals(p.getTypeofActivity()))
+                .filter(p -> profession.equalsIgnoreCase(p.getTypeofActivity()))
                 .toList();
 
         subscribersToWhomCallWasMade.forEach(p ->
@@ -88,12 +88,14 @@ public class PhoneDirectoryService {
         return subscribersToWhomCallWasMade;
     }
 
+    //ControllerTest+
     public List<String> returnAllInformationAllPersons() {
         return personsList.stream()
                 .map(Person::toString)
                 .toList();
     }
 
+    //ControllerTest+
     public Person addNewPerson(Person newPerson) {
         boolean isThereSuchPhoneNumber = personsList.stream()
                 .anyMatch(p -> checksUsersByPhoneNumber(newPerson.getPhoneNumber(), p));
@@ -106,11 +108,20 @@ public class PhoneDirectoryService {
         }
     }
 
+    // ControllerTest+
     public boolean deletePerson(String phoneNumber) {
         return personsList.remove(findPersonByPhoneNumber(phoneNumber));
     }
 
-    public Person findPersonByPhoneNumber(String phoneNumber) {
+    //ControllerTest+
+    public Person replaceUserData(Person newDataPerson, String numberPersonForReplace) {
+        personsList.stream()
+                .filter(p -> checksUsersByPhoneNumber(numberPersonForReplace, p))
+                .forEach(p -> ReplacedUserMapper.INSTANCE.updatePersonFromDto(p, newDataPerson));
+        return findPersonByPhoneNumber(numberPersonForReplace);
+    }
+
+    private Person findPersonByPhoneNumber(String phoneNumber) {
         for (Person p : personsList) {
             if (checksUsersByPhoneNumber(phoneNumber, p)) {
                 return p;
@@ -120,14 +131,7 @@ public class PhoneDirectoryService {
         throw new NoSuchElementException();
     }
 
-    public Person replaceUserData(Person newDataPerson, String numberPersonForReplace) {
-        personsList.stream()
-                .filter(p -> checksUsersByPhoneNumber(numberPersonForReplace, p))
-                .forEach(p -> ReplacedUserMapper.INSTANCE.updatePersonFromDto(p, newDataPerson));
-        return findPersonByPhoneNumber(numberPersonForReplace);
-    }
-
-    public boolean checksUsersByPhoneNumber(String phoneNumber, Person person) {
+    private boolean checksUsersByPhoneNumber(String phoneNumber, Person person) {
         return new StringBuilder(phoneNumber.replaceAll("\\D", ""))
                 .reverse()
                 .substring(0, 9)
@@ -135,8 +139,4 @@ public class PhoneDirectoryService {
                         .reverse()
                         .substring(0, 9));
     }
-
-//    public void makeCall(Person person) {
-//        System.out.printf(MASSAGE_BEGINNING_CALL, person.getFirstName(), person.getPhoneNumber());
-//    }
 }
