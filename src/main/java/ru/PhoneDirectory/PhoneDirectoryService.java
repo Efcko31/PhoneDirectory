@@ -29,7 +29,7 @@ public class PhoneDirectoryService {
     public static final String FULL_NAME_TYPE_ACTIVITY = "%s %s %s, %s\n";
     public static final String MASSAGE_BEGINNING_CALL = "Начат вызов. %s т.%s%n";
 
-    //1)найти всех людей проживающих в городе n, и вернуть их номер телефона и фио ControllerTest+
+    //1)найти всех людей проживающих в городе n, и вернуть их номер телефона и фио
     public List<FullNamePhoneNumb> findEveryoneWhoLivesInTheCityN(
             String cityN) {
         return personsList.stream()
@@ -38,7 +38,7 @@ public class PhoneDirectoryService {
                 .collect(Collectors.toList());
     }
 
-    //2)найти людей без отчества, и вернуть место их проживания, фио, номер телефона ControllerTest+
+    //2)найти людей без отчества, и вернуть место их проживания, фио, номер телефона
     public List<FullNamePhoneNumbAddress> findPeopleWithoutPatronymic() {
         return personsList.stream()
                 .filter(p -> p.getPatronymic() == null || p.getPatronymic().isEmpty())
@@ -46,7 +46,7 @@ public class PhoneDirectoryService {
                 .collect(Collectors.toList());
     }
 
-    //3)найти людей с профессией x, и вернуть информацию о них отсротирваную по городу ControllerTest+
+    //3)найти людей с профессией x, и вернуть информацию о них отсротирваную по городу
     public List<Person> findPeopleWithProfessionXAndSortByCity(
             String profession) {
         return personsList.stream()
@@ -56,7 +56,7 @@ public class PhoneDirectoryService {
                 .collect(Collectors.toList());
     }
 
-    //4)найти n людей с определенной профессией ControllerTest+
+    //4)найти n людей с определенной профессией
     public List<Person> findNPeopleWithTheSpecifiedProfession(String profession, int n) {
         if (profession == null || n <= 0) return List.of();
 
@@ -74,7 +74,7 @@ public class PhoneDirectoryService {
         return listPeopleWithProfessionN;
     }
 
-    //5)осуществить прозвон всех людей с профессией x, с уточнением актуальности информации ControllerTest+
+    //5)осуществить прозвон всех людей с профессией x, с уточнением актуальности информации
     public List<Person> callAllPeopleWithProfessionX(String profession) {
         if (profession == null) return List.of();
 
@@ -88,14 +88,12 @@ public class PhoneDirectoryService {
         return subscribersToWhomCallWasMade;
     }
 
-    //ControllerTest+
     public List<String> returnAllInformationAllPersons() {
         return personsList.stream()
                 .map(Person::toString)
                 .toList();
     }
 
-    //ControllerTest+
     public Person addNewPerson(Person newPerson) {
         boolean isThereSuchPhoneNumber = personsList.stream()
                 .anyMatch(p -> checksUsersByPhoneNumber(newPerson.getPhoneNumber(), p));
@@ -108,12 +106,10 @@ public class PhoneDirectoryService {
         }
     }
 
-    // ControllerTest+
     public boolean deletePerson(String phoneNumber) {
         return personsList.remove(findPersonByPhoneNumber(phoneNumber));
     }
 
-    //ControllerTest+
     public Person replaceUserData(Person newDataPerson, String numberPersonForReplace) {
         personsList.stream()
                 .filter(p -> checksUsersByPhoneNumber(numberPersonForReplace, p))

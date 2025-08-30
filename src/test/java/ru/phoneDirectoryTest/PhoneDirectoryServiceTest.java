@@ -6,9 +6,9 @@ import ru.PhoneDirectory.Person;
 import ru.PhoneDirectory.PhoneDirectoryService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static ru.phoneDirectoryTest.PersonsForPhoneDirectoryForTest.*;
 
 public class PhoneDirectoryServiceTest {
@@ -112,5 +112,15 @@ public class PhoneDirectoryServiceTest {
                 ), "89999999999"
         ).getLastName());
 
+        assertThrows(NoSuchElementException.class, () -> PHONE_DIRECTORY.replaceUserData(
+                new Person(
+                        null,
+                        null,
+                        "Тест",
+                        null,
+                        null,
+                        null,
+                        null), "88005556622"
+        ));
     }
 }
