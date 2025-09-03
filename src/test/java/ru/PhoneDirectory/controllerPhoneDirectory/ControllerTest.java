@@ -40,7 +40,7 @@ public class ControllerTest {
                 .thenReturn(testPersons.returnAllInformationAllPersons());
 
         mockMvc.perform(get("/phoneDirectoryService/getAllInformationAllPersons")
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))//todo здесь не надо
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0]")
                         .value(testPersons.getPersonsList().getFirst().toString()))

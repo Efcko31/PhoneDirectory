@@ -13,7 +13,8 @@ import ru.PhoneDirectory.dto.FullNamePhoneNumbAddress;
 import java.util.List;
 
 @RestController
-@RequestMapping("/phoneDirectoryService")
+@RequestMapping("/phoneDirectoryService")//todo persons
+//phoneDirectoryService - название сервиса, а не контролера
 @Slf4j //логирование
 public class Controller {
 
@@ -24,7 +25,7 @@ public class Controller {
         this.phoneDirectoryService = phoneDirectoryService;
     }
 
-    @GetMapping("/getAllPersons")
+    @GetMapping("/getAllPersons")//todo /all
     public List<Person> returnAllPersons() {
         log.info("запрос на всех пользователей");
         return phoneDirectoryService.getPersonsList();
@@ -36,13 +37,13 @@ public class Controller {
         return phoneDirectoryService.returnAllInformationAllPersons();
     }
 
-    @GetMapping("/findEveryoneWhoLivesInTheCityN")
+    @GetMapping("/findEveryoneWhoLivesInTheCityN")  //{city}
     public List<FullNamePhoneNumb> returnPersonsWhoLivesInTheCityN(@RequestParam("cityN") String cityN) {
         log.info("запрос на жителей города: {}", cityN);
         return phoneDirectoryService.findEveryoneWhoLivesInTheCityN(cityN);
     }
 
-    @GetMapping(value = "/findPeopleWithoutPatronymic", produces = "application/xml")
+    @GetMapping(value = "/findPeopleWithoutPatronymic", produces = "application/xml")//byPatronimyc - если null, искать без очества
     public List<FullNamePhoneNumbAddress> returnPeopleWithoutPatronymic() {
         log.info("запрос на людей без отчества");
         return phoneDirectoryService.findPeopleWithoutPatronymic();
@@ -84,7 +85,7 @@ public class Controller {
     */
 
 
-    @PostMapping(value = "/addNewPersonFormatXML", consumes = "application/xml", produces = "application/xml")
+    @PostMapping(value = "/addNewPersonFormatXML", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
     public Person addANewPersonFormatXML(@RequestBody Person person) {
         return phoneDirectoryService.addNewPerson(person);
     }
