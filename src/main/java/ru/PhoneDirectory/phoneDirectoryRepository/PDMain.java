@@ -10,7 +10,7 @@ public class PDMain {
 
     public static void main(String[] args) {
         PhoneDirectoryRepository repository = new PhoneDirectoryRepository();
-        PHONE_DIRECTORY.getPersonsList().forEach(p -> {
+        PHONE_DIRECTORY.getAllPersons().forEach(p -> {
                     try {
                         repository.addPerson(p);
                         System.out.println(p.getFirstName() + p.getLastName() + " - добавлен в БД");

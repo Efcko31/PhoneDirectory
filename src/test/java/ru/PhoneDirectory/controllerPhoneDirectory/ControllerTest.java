@@ -36,16 +36,15 @@ public class ControllerTest {
 
     @Test
     void getAllPersonsTest() throws Exception {
-        when(phoneDirectoryService.returnAllInformationAllPersons())
-                .thenReturn(testPersons.returnAllInformationAllPersons());
+        when(phoneDirectoryService.getAllPersons())
+                .thenReturn(testPersons.getAllPersons());
 
-        mockMvc.perform(get("/phoneDirectoryService/getAllInformationAllPersons")
-                        .accept(MediaType.APPLICATION_JSON))//todo здесь не надо
+        mockMvc.perform(get("/persons/all"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]")
-                        .value(testPersons.getPersonsList().getFirst().toString()))
-                .andExpect(jsonPath("$[-1]")
-                        .value(testPersons.getPersonsList().getLast().toString()));
+                .andExpect(jsonPath("$[0].lastName")
+                        .value(testPersons.getAllPersons().getFirst().getLastName()))
+                .andExpect(jsonPath("$[-1].lastName")
+                        .value(testPersons.getAllPersons().getLast().getLastName()));
     }
 
     @Test
@@ -63,8 +62,8 @@ public class ControllerTest {
         when(phoneDirectoryService.addNewPerson(any(Person.class)))
                 .thenReturn(newPersonTest);
 
-        mockMvc.perform(post("/phoneDirectoryService/addNewPerson")
-                        .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/persons/add")
+                        .contentType(MediaType.APPLICATION_JSON) // не работает без этого
                         .content("{" +
                                 "\"phoneNumber\" : \"+7-888-858-88-00\",\n" +
                                 "\"firstName\" : \"Алексей\",\n" +
@@ -86,14 +85,14 @@ public class ControllerTest {
         when(phoneDirectoryService.deletePerson("+7-111-111-11-11"))
                 .thenReturn(true);
 
-        mockMvc.perform(delete("/phoneDirectoryService/deletePerson/+7-111-111-11-11")
+        mockMvc.perform(delete("/persons/delete/+7-111-111-11-11")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
 
         when(phoneDirectoryService.deletePerson(eq("+7-111-000-11-11"))).
                 thenReturn(false);
-        mockMvc.perform(delete("/phoneDirectoryService/deletePerson/+7-111-000-11-11")
+        mockMvc.perform(delete("/persons/delete/+7-111-000-11-11")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("false"));
@@ -114,7 +113,7 @@ public class ControllerTest {
         when(phoneDirectoryService.replaceUserData(any(Person.class), eq("89999999999"))
         ).thenReturn(updatedPerson);
 
-        mockMvc.perform(put("/phoneDirectoryService/replaceUserData/89999999999")
+        mockMvc.perform(put("/persons/replace/89999999999")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{" +
                                 "\"lastName\" : \"Пушкин\",\n" +
@@ -137,8 +136,7 @@ public class ControllerTest {
         when(phoneDirectoryService.callAllPeopleWithProfessionX(eq(professionToRequest)))
                 .thenReturn(peopleWithTheRequestedProfession);
 
-        mockMvc.perform(get("/phoneDirectoryService/callAllPeopleWithProfessionX")
-                        .param("profession", professionToRequest)
+        mockMvc.perform(get("/persons/call/" + professionToRequest)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName")
@@ -154,8 +152,7 @@ public class ControllerTest {
         when(phoneDirectoryService.findNPeopleWithTheSpecifiedProfession(professionToRequest, 2))
                 .thenReturn(peopleWithTheRequestedProfessionAndeNumber);
 
-        mockMvc.perform(get("/phoneDirectoryService/findNPeopleWithTheSpecifiedProfession")
-                        .param("profession", professionToRequest)
+        mockMvc.perform(get("/persons/findSomeByProfession/" + professionToRequest)
                         .param("number", "2")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -166,16 +163,16 @@ public class ControllerTest {
 
     @Test
     void returnPersonsWhoLivesInTheCityXTest() throws Exception {
+        String city = "МосквА";
         List<FullNamePhoneNumb> peopleWithTheRequestedWhoLivesInTheCity = Stream.of(NIKOLAY_IVANOV.getPerson(),
                         ALEKSANDR_ALEKSANDROV.getPerson(), OLEG_OLEGOV.getPerson())
                 .map(FullNamePhoneNumbMapper.INSTANCE::toFullNamePhoneNumb)
                 .toList();
 
-        when(phoneDirectoryService.findEveryoneWhoLivesInTheCityN("МосквА"))
+        when(phoneDirectoryService.findEveryoneWhoLivesInTheCityN(city))
                 .thenReturn(peopleWithTheRequestedWhoLivesInTheCity);
 
-        mockMvc.perform(get("/phoneDirectoryService/findEveryoneWhoLivesInTheCityN")
-                        .param("cityN", "МосквА")
+        mockMvc.perform(get("/persons/findByCity/" + city)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].phoneNumber")
@@ -192,7 +189,7 @@ public class ControllerTest {
 
         when(phoneDirectoryService.findPeopleWithoutPatronymic()).thenReturn(personListWithoutPatronymic);
 
-        mockMvc.perform(get("/phoneDirectoryService/findPeopleWithoutPatronymic")
+        mockMvc.perform(get("/persons/withoutPatronymic")
                         .accept(MediaType.APPLICATION_XML))
                 .andExpect(status().isOk())
                 .andExpect(xpath("/List/item[1]/lastName/text()")
@@ -201,14 +198,14 @@ public class ControllerTest {
 
     @Test
     void findPeopleWithProfessionXAndSortByCityTest() throws Exception {
+        String profession = "ТаКсист";
         List<Person> ListPeopleWithProfessionXAndSortByCity = List.of(DENIS_DENISOV.getPerson(),
                 ALEKSEY_ALEKSEEV.getPerson());
 
-        when(phoneDirectoryService.findPeopleWithProfessionXAndSortByCity("ТаКсист"))
+        when(phoneDirectoryService.findPeopleWithProfessionXAndSortByCity(profession))
                 .thenReturn(ListPeopleWithProfessionXAndSortByCity);
 
-        mockMvc.perform(get("/phoneDirectoryService/findPeopleWithProfessionX")
-                        .param("profession", "ТаКсист")
+        mockMvc.perform(get("/persons/findByProfession/" + profession)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].lastName")

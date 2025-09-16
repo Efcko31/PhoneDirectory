@@ -13,7 +13,7 @@ import ru.PhoneDirectory.dto.FullNamePhoneNumbAddress;
 import java.util.List;
 
 @RestController
-@RequestMapping("/phoneDirectoryService")//todo persons
+@RequestMapping("/persons")
 //phoneDirectoryService - название сервиса, а не контролера
 @Slf4j //логирование
 public class Controller {
@@ -25,51 +25,52 @@ public class Controller {
         this.phoneDirectoryService = phoneDirectoryService;
     }
 
-    @GetMapping("/getAllPersons")//todo /all
+    @GetMapping("/all")
     public List<Person> returnAllPersons() {
         log.info("запрос на всех пользователей");
-        return phoneDirectoryService.getPersonsList();
+        return phoneDirectoryService.getAllPersons();
     }
 
-    @GetMapping("/getAllInformationAllPersons")
-    public List<String> returnAllInformationAllPersons() {
-        log.info("запрос текстовой информации всех пользователей");
-        return phoneDirectoryService.returnAllInformationAllPersons();
+//    @GetMapping("/getAllInformationAllPersons")
+//    public List<String> returnAllInformationAllPersons() {
+//        log.info("запрос текстовой информации всех пользователей");
+//        return phoneDirectoryService.returnAllInformationAllPersons();
+//    }
+
+    @GetMapping("/findByCity/{city}")
+    public List<FullNamePhoneNumb> returnPersonsWhoLivesInTheCityN(@PathVariable("city") String city) {
+        log.info("запрос на жителей города: {}", city);
+        return phoneDirectoryService.findEveryoneWhoLivesInTheCityN(city);
     }
 
-    @GetMapping("/findEveryoneWhoLivesInTheCityN")  //{city}
-    public List<FullNamePhoneNumb> returnPersonsWhoLivesInTheCityN(@RequestParam("cityN") String cityN) {
-        log.info("запрос на жителей города: {}", cityN);
-        return phoneDirectoryService.findEveryoneWhoLivesInTheCityN(cityN);
-    }
-
-    @GetMapping(value = "/findPeopleWithoutPatronymic", produces = "application/xml")//byPatronimyc - если null, искать без очества
-    public List<FullNamePhoneNumbAddress> returnPeopleWithoutPatronymic() {
+    @GetMapping(value = "/withoutPatronymic", produces = "application/xml")
+//byPatronimyc - если null, искать без очества
+    public List<FullNamePhoneNumbAddress> returnPeopleWithoutPatronymic() { //todo может переделать под просто поиск по фамилии.
         log.info("запрос на людей без отчества");
         return phoneDirectoryService.findPeopleWithoutPatronymic();
     }
 
-    @GetMapping("/findPeopleWithProfessionX")
-    public List<Person> findPeopleWithProfessionXAndSortByCity(@RequestParam("profession") String profession) {
+    @GetMapping("/findByProfession/{profession}")
+    public List<Person> findPeopleWithProfessionXAndSortByCity(@PathVariable("profession") String profession) {
         log.info("запрос на людей с профессией: {} + сортировка по городу", profession);
         return phoneDirectoryService.findPeopleWithProfessionXAndSortByCity(profession);
     }
 
-    @GetMapping("/findNPeopleWithTheSpecifiedProfession")
+    @GetMapping("/findSomeByProfession/{profession}")
     public List<Person> findNPeopleWithTheSpecifiedProfession(
-            @RequestParam("profession") String profession, @RequestParam("number") int number) {
+            @PathVariable("profession") String profession, @RequestParam("number") int number) {
         log.info("Запрос на людей профессии {} в количестве {}", profession, number);
         return phoneDirectoryService.findNPeopleWithTheSpecifiedProfession(profession, number);
     }
 
-    @GetMapping("/callAllPeopleWithProfessionX")
-    public List<Person> callAllPeopleWithProfessionX(@RequestParam("profession") String profession) {
+    @GetMapping("/call/{profession}")
+    public List<Person> callAllPeopleWithProfessionX(@PathVariable("profession") String profession) {
         log.info("Запрос на прозвон людей с профессией {}", profession);
         return phoneDirectoryService.callAllPeopleWithProfessionX(profession);
     }
 
     //Запрос в формате JSON и ответ в формате JSON
-    @PostMapping(value = "/addNewPerson", produces = MediaType.APPLICATION_JSON_VALUE) //возвращает Json
+    @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE) //возвращает Json
     public Person addNewPerson(@RequestBody Person person) {
         log.info("запрос на добавление нового гражданина!");
         return phoneDirectoryService.addNewPerson(person);
@@ -102,7 +103,7 @@ public class Controller {
     </person>
     */
 
-    @PutMapping(value = "/replaceUserData/{phoneNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/replace/{phoneNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Person replaceUserData(@RequestBody Person newDataPerson,
                                   @PathVariable("phoneNumber") String numberPersonForReplace) {
         log.info("запрос на изменение данных о пользователе с номером: {}", numberPersonForReplace);
@@ -117,7 +118,7 @@ public class Controller {
     }
     */
 
-    @DeleteMapping("/deletePerson/{phoneNumber}")
+    @DeleteMapping("/delete/{phoneNumber}")
     public boolean deletePerson(@PathVariable("phoneNumber") String phoneNumberDeletedPerson) {
         log.info("Запрос на удаление пользователя с номером телефона {}", phoneNumberDeletedPerson);
         return phoneDirectoryService.deletePerson(phoneNumberDeletedPerson);

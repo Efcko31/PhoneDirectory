@@ -3,9 +3,11 @@ package ru.PhoneDirectory;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @XmlRootElement(name = "person")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Person extends Object {

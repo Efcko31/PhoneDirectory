@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-@Data
+
 @AllArgsConstructor
 @Service
 public class PhoneDirectoryService {
@@ -28,6 +28,10 @@ public class PhoneDirectoryService {
 
     public static final String FULL_NAME_TYPE_ACTIVITY = "%s %s %s, %s\n";
     public static final String MASSAGE_BEGINNING_CALL = "Начат вызов. %s т.%s%n";
+
+    public List<Person> getAllPersons() {
+        return personsList;
+    }
 
     //1)найти всех людей проживающих в городе n, и вернуть их номер телефона и фио
     public List<FullNamePhoneNumb> findEveryoneWhoLivesInTheCityN(
@@ -88,11 +92,11 @@ public class PhoneDirectoryService {
         return subscribersToWhomCallWasMade;
     }
 
-    public List<String> returnAllInformationAllPersons() {
-        return personsList.stream()
-                .map(Person::toString)
-                .toList();
-    }
+//    public List<String> returnAllInformationAllPersons() {
+//        return personsList.stream()
+//                .map(Person::toString)
+//                .toList();
+//    }
 
     public Person addNewPerson(Person newPerson) {
         boolean isThereSuchPhoneNumber = personsList.stream()
