@@ -1,7 +1,9 @@
 package ru.PhoneDirectory.controllerPhoneDirectory;
 
+import ch.qos.logback.core.encoder.EchoEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/persons")
-//phoneDirectoryService - название сервиса, а не контролера
 @Slf4j //логирование
 public class Controller {
 
@@ -31,12 +32,6 @@ public class Controller {
         return phoneDirectoryService.getAllPersons();
     }
 
-//    @GetMapping("/getAllInformationAllPersons")
-//    public List<String> returnAllInformationAllPersons() {
-//        log.info("запрос текстовой информации всех пользователей");
-//        return phoneDirectoryService.returnAllInformationAllPersons();
-//    }
-
     @GetMapping("/findByCity/{city}")
     public List<FullNamePhoneNumb> returnPersonsWhoLivesInTheCityN(@PathVariable("city") String city) {
         log.info("запрос на жителей города: {}", city);
@@ -44,8 +39,7 @@ public class Controller {
     }
 
     @GetMapping(value = "/withoutPatronymic", produces = "application/xml")
-//byPatronimyc - если null, искать без очества
-    public List<FullNamePhoneNumbAddress> returnPeopleWithoutPatronymic() { //todo может переделать под просто поиск по фамилии.
+    public List<FullNamePhoneNumbAddress> returnPeopleWithoutPatronymic() {
         log.info("запрос на людей без отчества");
         return phoneDirectoryService.findPeopleWithoutPatronymic();
     }
@@ -86,7 +80,8 @@ public class Controller {
     */
 
 
-    @PostMapping(value = "/addNewPersonFormatXML", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
+    @PostMapping(value = "/addNewPersonFormatXML", consumes = MediaType.APPLICATION_XML_VALUE,
+            produces = MediaType.APPLICATION_XML_VALUE)
     public Person addANewPersonFormatXML(@RequestBody Person person) {
         return phoneDirectoryService.addNewPerson(person);
     }
@@ -119,9 +114,18 @@ public class Controller {
     */
 
     @DeleteMapping("/delete/{phoneNumber}")
-    public boolean deletePerson(@PathVariable("phoneNumber") String phoneNumberDeletedPerson) {
+    public ResponseEntity<String> deletePerson(@PathVariable("phoneNumber") String phoneNumberDeletedPerson) {
         log.info("Запрос на удаление пользователя с номером телефона {}", phoneNumberDeletedPerson);
-        return phoneDirectoryService.deletePerson(phoneNumberDeletedPerson);
+        try {
+            boolean isDelete = phoneDirectoryService.deletePerson(phoneNumberDeletedPerson);
+            if (isDelete) {
+                return ResponseEntity.ok("Пользователь удален");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Пользователь с таким номером не найден");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при удалении");
+        }
     }
 
     //ОСТАВИЛ для примера

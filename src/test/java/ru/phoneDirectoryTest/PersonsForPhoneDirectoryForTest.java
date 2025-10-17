@@ -27,7 +27,7 @@ public enum PersonsForPhoneDirectoryForTest {
             "улица Громова, д.6, кв.12",
             "Разработчик")),
     ILYA_ILYIYOV(new Person(
-            "+7-333-333-33-33",
+            "8-333-333-33-33",
             "Илья",
             "Ильёв",
             "Ильич",

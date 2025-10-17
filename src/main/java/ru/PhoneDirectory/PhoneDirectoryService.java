@@ -2,6 +2,8 @@ package ru.PhoneDirectory;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.PhoneDirectory.dto.FullNamePhoneNumb;
 import ru.PhoneDirectory.dto.FullNamePhoneNumbAddress;
@@ -132,11 +134,17 @@ public class PhoneDirectoryService {
     }
 
     private boolean checksUsersByPhoneNumber(String phoneNumber, Person person) {
+        String digits1 = phoneNumber.replaceAll("\\D", "");
+        String digits2 = person.getPhoneNumber().replaceAll("\\D", "");
+
+        if (digits1.length() != 10 || digits2.length()!=10) {
+            System.out.println("Неверный формат телефона!");
+            return false;
+        }
+
         return new StringBuilder(phoneNumber.replaceAll("\\D", ""))
-                .reverse()
-                .substring(0, 9)
+                .substring(1, 11)
                 .equals(new StringBuilder(person.getPhoneNumber().replaceAll("\\D", ""))
-                        .reverse()
-                        .substring(0, 9));
+                        .substring(1, 11));
     }
 }

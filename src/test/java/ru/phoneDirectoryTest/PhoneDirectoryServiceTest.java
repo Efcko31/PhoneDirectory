@@ -96,6 +96,12 @@ public class PhoneDirectoryServiceTest {
 //    @Test
 //    void checksUsersByPhoneNumberTest() {
 //        assertTrue(PHONE_DIRECTORY.checksUsersByPhoneNumber("82222222222", PETR_PETROV.getPerson()));
+//        assertTrue(PHONE_DIRECTORY.checksUsersByPhoneNumber("+7-222-222-22-22", PETR_PETROV.getPerson()));
+//        assertFalse(PHONE_DIRECTORY.checksUsersByPhoneNumber("82232222222", PETR_PETROV.getPerson()));
+//        assertTrue(PHONE_DIRECTORY.checksUsersByPhoneNumber("+7-333-333-33-33", ILYA_ILYIYOV.getPerson()));
+//        assertFalse(PHONE_DIRECTORY.checksUsersByPhoneNumber("+7-333-333-33-32", ILYA_ILYIYOV.getPerson()));
+//        assertFalse(PHONE_DIRECTORY.checksUsersByPhoneNumber("+7-233-333-33-32", ILYA_ILYIYOV.getPerson()));
+//        assertTrue(PHONE_DIRECTORY.checksUsersByPhoneNumber("8-333-333-33-33", ILYA_ILYIYOV.getPerson()));
 //    }
 
     @Test
